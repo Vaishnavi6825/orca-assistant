@@ -30,14 +30,7 @@ async def read_index(request: Request):
 
 🗂 2. Folder Structure
 
-voice-agent/
-├── backend/
-│   └── main.py
-├── static/
-│   └── (your CSS and JS are inline for now)
-├── templates/
-│   └── index.html
-✅ You used a clean, modular project structure with separate folders for static/ (CSS/JS) and templates/ (HTML) files.
+<pre><code>📁 voice-agent/ ├── 📁 backend/ │ └── main.py ├── 📁 static/ │ └── (your CSS and JS are inline for now) ├── 📁 templates/ │ └── index.html </code></pre>
 
 🌐 3. Frontend HTML + CSS + JS
 You created an interactive, animated Orca Assistant UI in index.html, using:
