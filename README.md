@@ -23,6 +23,7 @@ You defined a root route (`/`) that renders `index.html`.
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+```
 
 ✅ This successfully serves the frontend page when you visit:
 👉 http://127.0.0.1:8000
