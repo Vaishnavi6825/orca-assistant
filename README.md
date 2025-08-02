@@ -31,9 +31,12 @@ async def read_index(request: Request):
 🗂 2. Folder Structure
 
 <pre><code>📁 voice-agent/ 
-    ├── 📁 backend/ │ └── main.py 
-    ├── 📁 static/ │ └── (your CSS and JS are inline for now) 
-    ├── 📁 templates/ │ └── index.html </code></pre>
+    ├── 📁 backend/ 
+    │ └── main.py 
+    ├── 📁 static/ 
+    │ └── (your CSS and JS are inline for now) 
+    ├── 📁 templates/ 
+    │ └── index.html </code></pre>
 
 🌐 3. Frontend HTML + CSS + JS
 You created an interactive, animated Orca Assistant UI in index.html, using:
