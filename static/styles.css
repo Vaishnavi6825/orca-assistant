@@ -1,0 +1,98 @@
+body {
+  background: radial-gradient(circle at center, #001f3f, #000814);
+  color: #a8dfff;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding-top: 10%;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 180px;
+  height: 120px;
+  background: black;
+  border-radius: 50% 50% 40% 40% / 50% 50% 60% 60%;
+  position: relative;
+  box-shadow: 0 0 30px #00bfff55;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.avatar::before {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  top: 10px;
+  left: 10px;
+  transform: rotate(-10deg);
+  opacity: 0.9;
+}
+
+.avatar::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  top: 15px;
+  right: 20px;
+  transform: rotate(15deg);
+  opacity: 0.9;
+}
+
+.eyes {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 30px;
+}
+
+.eye {
+  width: 15px;
+  height: 15px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.pupil {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+  background: black;
+  border-radius: 50%;
+  transition: transform 0.1s linear;
+}
+
+.mouth {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 30px;
+  border-bottom: 5px solid white;
+  border-radius: 0 0 50px 50px;
+}
+
+#responseText {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #a8dfff;
+  display: none;
+}
