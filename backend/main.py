@@ -1,20 +1,58 @@
 import os
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
+import requests
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from starlette.requests import Request
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
+# 📦 Load environment variables from .env
+load_dotenv()
+
+# ✅ Create FastAPI app
 app = FastAPI()
 
-# Adjust base directory to point to the project root (not just backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 👈 one level up
-STATIC_DIR = os.path.join(BASE_DIR, "static")
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+# ✅ Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can restrict to ["http://localhost:5500"] if needed
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
+# ✅ Mount static files at /static (not root)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "..", "static")
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
-@app.get("/", response_class=HTMLResponse)
-async def read_index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+# ✅ Simple root test route
+@app.get("/")
+async def root():
+    return HTMLResponse("<h2>✅ FastAPI TTS backend is running</h2>")
+
+# ✅ MURF API Key
+MURF_API_KEY = os.getenv("MURF_API_KEY")
+
+# ✅ Request model for TTS
+class TTSRequest(BaseModel):
+    text: str
+    voiceId: str = "en-US-natalie"
+
+# ✅ POST endpoint for TTS
+@app.post("/api/tts")
+async def generate_tts(request: TTSRequest):
+    try:
+        headers = {
+            "api-key": MURF_API_KEY,
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "text": request.text,
+            "voiceId": request.voiceId
+        }
+        response = requests.post("https://api.murf.ai/v1/speech/generate", headers=headers, json=payload)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
