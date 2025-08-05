@@ -1,4 +1,5 @@
 # 🐳 orca-assistant
+# 🔊 30 Days of AI Voice Agents 
 
 ## ✅ Day 1: Project Setup – Complete Breakdown
 
@@ -63,10 +64,6 @@ You created an interactive, animated Orca Assistant UI in index.html, using:
 
 📦 4. Static Files Setup
 Even though your CSS and JS are inline right now, your FastAPI setup is already ready to serve external CSS and JS files from /static.
-
-# 🔊 30 Days of AI Voice Agents – Progress Log
-
-This project is part of the **#30DaysOfVoiceAgents** challenge. I’m building an interactive AI Voice Assistant using FastAPI, JavaScript, and Murf’s TTS API.
 
  - 📝 LinkedIn Post for Day 1:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_python-30daysofvoiceagents-fastapi-activity-7357460614165778433-Lv7i?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
 
