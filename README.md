@@ -137,5 +137,28 @@ voice-agent/
 ├── .env            ← Added to .gitignore
 ├── .gitignore      ← Added for pyc and env files
 ```
+---
+## 🚀 Day 5: Voice Recorder Upload with FastAPI
+
+Today, I took the Echo Bot from Day 4 to the next level by adding **server-side audio upload**! 🎙️⚡
+
+Once you stop recording your voice, it now:
+✅ Uploads the audio file to a FastAPI backend  
+✅ Displays the file's name, size, and content type on the frontend  
+✅ Saves the audio in a dedicated `/uploads` folder on the server
+
+### 🔧 What I Built:
+- Auto-upload using JavaScript `fetch` and `FormData`
+- Backend endpoint (`/upload/`) using FastAPI to:
+  - Receive and save the file
+  - Return metadata like filename, content type, and size
+- Clear status updates in the browser: "Uploading..." → "✅ Uploaded: filename (size, type)"
+
+### 🧠 What I Learned:
+- Using `UploadFile` and `shutil` to handle file uploads in FastAPI
+- Showing real-time status to users with dynamic DOM updates
+- Structuring backend/frontend cleanly for small web apps
+---
+
 
 
