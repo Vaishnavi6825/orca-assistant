@@ -158,6 +158,9 @@ Once you stop recording your voice, it now:
 - Using `UploadFile` and `shutil` to handle file uploads in FastAPI
 - Showing real-time status to users with dynamic DOM updates
 - Structuring backend/frontend cleanly for small web apps
+
+-📝 LinkedIn Post for Day 5:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-murfai-fastapi-activity-7358831843317596161--NuA?utm_source=share&utm_medium=member_android&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
 ---
 
 
