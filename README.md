@@ -163,5 +163,37 @@ Once you stop recording your voice, it now:
 
 ---
 
+# 🚀 Day 6: Server-Side Transcription with AssemblyAI
+
+Today, my Voice Agent got a lot smarter — it can now **transcribe spoken words to text** using the power of **AI transcription APIs**!
+
+## 🔧 How it works:
+
+Once I stop recording:
+
+🔁 The bot automatically uploads the audio  
+🧠 Sends it to the `/transcribe/file` endpoint on my FastAPI server  
+📝 Receives a real-time transcription and displays it in the UI!
+
+## 💡 What I learned:
+
+🔹 Worked with **AssemblyAI SDK** to transcribe in-memory audio bytes  
+🔹 Created a new **`/transcribe/file`** endpoint to process audio without saving it  
+🔹 Understood how to connect **frontend voice input → backend processing → real-time text output**
+
+🎯 Watching my speech turn into accurate text in seconds felt magical! ✨
+
+## 📚 Resources I used:
+
+- [AssemblyAI Python SDK Docs](https://docs.assemblyai.com/)
+- [Voice Agent Series Inspiration](https://lnkd.in/e2Yg6mie)
+
+- 📝 LinkedIn Post for Day 6:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-murfai-assemblyai-activity-7359139467523227648-xoHP?utm_source=share&utm_medium=member_android&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+
+
+
 
 
