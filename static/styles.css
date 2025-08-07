@@ -1,98 +1,86 @@
+/* 🌌 OVERWRITING FINAL STYLES TO MATCH YOUR LATEST HTML STRUCTURE */
+
 body {
   background: radial-gradient(circle at center, #001f3f, #000814);
   color: #a8dfff;
   font-family: 'Segoe UI', sans-serif;
   text-align: center;
-  padding-top: 10%;
   margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 60px;
 }
 
-.avatar {
-  width: 180px;
-  height: 120px;
-  background: black;
-  border-radius: 50% 50% 40% 40% / 50% 50% 60% 60%;
-  position: relative;
-  box-shadow: 0 0 30px #00bfff55;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
+.tts-box {
+  margin-top: 30px;
+  background-color: rgba(0, 51, 102, 0.3);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 238, 255, 0.3);
+  max-width: 400px;
+  width: 90%;
 }
 
-.avatar::before {
-  content: "";
-  position: absolute;
-  width: 40px;
-  height: 60px;
-  background: white;
-  border-radius: 50%;
-  top: 10px;
-  left: 10px;
-  transform: rotate(-10deg);
-  opacity: 0.9;
+.tts-box h1 {
+  font-size: 22px;
+  color: #00eaff;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px #00eaffaa;
 }
 
-.avatar::after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 50px;
-  background: white;
-  border-radius: 50%;
-  top: 15px;
-  right: 20px;
-  transform: rotate(15deg);
-  opacity: 0.9;
-}
-
-.eyes {
-  position: absolute;
-  top: 30px;
+.tts-box input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
   width: 100%;
-  display: flex;
-  justify-content: space-around;
-  padding: 0 30px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 8px rgba(0, 238, 255, 0.2);
 }
 
-.eye {
-  width: 15px;
-  height: 15px;
-  background: white;
-  border-radius: 50%;
-  position: relative;
-  overflow: hidden;
+.tts-box button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #00eaff;
+  color: #000;
+  margin: 10px 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.pupil {
-  position: absolute;
-  top: 3px;
-  left: 5px;
-  width: 6px;
-  height: 6px;
-  background: black;
-  border-radius: 50%;
-  transition: transform 0.1s linear;
+.tts-box button:hover {
+  background-color: #00cce6;
 }
 
-.mouth {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 30px;
-  border-bottom: 5px solid white;
-  border-radius: 0 0 50px 50px;
+.tts-box audio {
+  margin-top: 15px;
+  width: 100%;
+  outline: none;
+  border-radius: 6px;
 }
 
-#responseText {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #a8dfff;
-  display: none;
+#echoAudio 
+{
+  display: block; /* Makes the audio player a block element */
+  margin: 15px auto 0 auto; /* Centers it horizontally with 15px top margin */
+}
+
+#uploadStatus {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #00ffcc;
+  text-shadow: 0 0 6px #00ffccaa;
 }

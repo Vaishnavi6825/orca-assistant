@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Talking Orca Assistant</title>
   <style>
-    /* [Styling remains exactly as you had it - untouched] */
+    /* [Styling remains untouched from your original design] */
     body {
       background: radial-gradient(circle at center, #001f33, #000814);
       display: flex;
@@ -18,159 +18,41 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    .ripple {
-      position: absolute;
-      top: 70px;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: rgba(0, 238, 255, 0.15);
-      animation: rippleWave 3s infinite ease-out;
-      z-index: 0;
-    }
+    .ripple { position: absolute; top: 70px; width: 200px; height: 200px; border-radius: 50%; background: rgba(0, 238, 255, 0.15); animation: rippleWave 3s infinite ease-out; z-index: 0; }
+    .ripple::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 238, 255, 0.1); animation: rippleWave 3s infinite ease-out; animation-delay: 1.5s; }
+    @keyframes rippleWave { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
 
-    .ripple::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: rgba(0, 238, 255, 0.1);
-      animation: rippleWave 3s infinite ease-out;
-      animation-delay: 1.5s;
-    }
+    .title { position: relative; font-size: 28px; color: #00eaff; text-shadow: 0 0 15px rgba(0, 238, 255, 0.8), 0 0 30px rgba(0, 238, 255, 0.6); margin-bottom: 20px; animation: waveText 3s ease-in-out infinite; z-index: 1; }
+    @keyframes waveText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-    @keyframes rippleWave {
-      0% { transform: scale(0.8); opacity: 0.6; }
-      100% { transform: scale(2.5); opacity: 0; }
-    }
-
-    .title {
-      position: relative;
-      font-size: 28px;
-      color: #00eaff;
-      text-shadow: 0 0 15px rgba(0, 238, 255, 0.8), 0 0 30px rgba(0, 238, 255, 0.6);
-      margin-bottom: 20px;
-      animation: waveText 3s ease-in-out infinite;
-      z-index: 1;
-    }
-
-    @keyframes waveText {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .orca {
-      position: relative;
-      width: 200px;
-      height: 120px;
-      background: black;
-      border-radius: 100px 100px 80px 80px;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-      animation: swim 3s ease-in-out infinite;
-      cursor: pointer;
-    }
-
-    .belly, .eye, .fin, .tail, .flipper, .mouth-wave {
-      position: absolute;
-    }
-
+    .orca { position: relative; width: 200px; height: 120px; background: black; border-radius: 100px 100px 80px 80px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.3); animation: swim 3s ease-in-out infinite; cursor: pointer; }
+    .belly, .eye, .fin, .tail, .flipper, .mouth-wave { position: absolute; }
     .belly { bottom: 0; left: 20px; width: 160px; height: 60px; background: white; border-radius: 50% / 60%; opacity: 0.9; }
     .eye { top: 20px; left: 40px; width: 30px; height: 30px; background: white; border-radius: 50%; box-shadow: 0 0 10px white; }
     .eye::after { content: ''; top: 8px; left: 8px; width: 14px; height: 14px; background: black; border-radius: 50%; position: absolute; }
     .fin { top: -20px; left: 90px; width: 40px; height: 40px; background: black; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); transform: rotate(-20deg); }
     .tail { right: -50px; top: 40px; width: 50px; height: 40px; background: black; clip-path: polygon(0% 50%, 100% 0%, 100% 100%); animation: tail-move 1s infinite alternate ease-in-out; }
     .flipper { bottom: -20px; left: 70px; width: 40px; height: 30px; background: black; border-radius: 20px; transform: rotate(30deg); animation: flipper-move 1s infinite alternate ease-in-out; }
-
-    .mouth-wave {
-      bottom: 15px; left: 20px; width: 20px; height: 10px;
-      background: rgba(0, 238, 255, 0.4);
-      border-radius: 50%;
-      animation: pulse 1.5s infinite ease-in-out;
-      box-shadow: 0 0 10px rgba(0, 238, 255, 0.8);
-    }
-
-    .mouth-wave::after, .mouth-wave::before {
-      content: ''; position: absolute; width: 100%; height: 100%;
-      border-radius: 50%; background: rgba(0, 238, 255, 0.2);
-      animation: pulse 1.5s infinite ease-in-out;
-    }
-
+    .mouth-wave { bottom: 15px; left: 20px; width: 20px; height: 10px; background: rgba(0, 238, 255, 0.4); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; box-shadow: 0 0 10px rgba(0, 238, 255, 0.8); }
+    .mouth-wave::after, .mouth-wave::before { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 238, 255, 0.2); animation: pulse 1.5s infinite ease-in-out; }
     .mouth-wave::before { animation-delay: 0.3s; }
     .mouth-wave::after { animation-delay: 0.6s; }
-
     @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
     @keyframes swim { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-15px) translateX(10px); } }
     @keyframes tail-move { 0% { transform: rotate(0deg); } 100% { transform: rotate(15deg); } }
     @keyframes flipper-move { 0% { transform: rotate(30deg); } 100% { transform: rotate(50deg); } }
 
-    .bubble {
-      position: absolute; bottom: 0;
-      width: 15px; height: 15px;
-      background: rgba(173, 216, 230, 0.7);
-      border-radius: 50%;
-      animation: bubbleUp 8s linear infinite;
-      box-shadow: 0 0 10px rgba(173, 216, 230, 0.9);
-    }
+    .bubble { position: absolute; bottom: 0; width: 15px; height: 15px; background: rgba(173, 216, 230, 0.7); border-radius: 50%; animation: bubbleUp 8s linear infinite; box-shadow: 0 0 10px rgba(173, 216, 230, 0.9); }
+    @keyframes bubbleUp { 0% { transform: translateY(0) scale(0.8); opacity: 1; } 100% { transform: translateY(-120vh) scale(1.2); opacity: 0; } }
 
-    @keyframes bubbleUp {
-      0% { transform: translateY(0) scale(0.8); opacity: 1; }
-      100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
-    }
+    .click-hint { position: absolute; bottom: 130px; font-size: 18px; color: #00eaff; text-shadow: 0 0 10px #00eaff; animation: waveText 2s infinite; background: rgba(0, 0, 0, 0.4); padding: 6px 12px; border-radius: 20px; }
+    .message-box { margin-top: 20px; font-size: 20px; color: #00ffcc; text-shadow: 0 0 8px #00ffcc; display: none; animation: fadeIn 0.5s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .click-hint {
-      position: absolute;
-      bottom: 130px;
-      font-size: 18px;
-      color: #00eaff;
-      text-shadow: 0 0 10px #00eaff;
-      animation: waveText 2s infinite;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 6px 12px;
-      border-radius: 20px;
-    }
-
-    .message-box {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #00ffcc;
-      text-shadow: 0 0 8px #00ffcc;
-      display: none;
-      animation: fadeIn 0.5s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .tts-box {
-      margin-top: 40px;
-      text-align: center;
-    }
-
-    input[type="text"] {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      width: 300px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      background-color: #00eaff;
-      color: #000;
-      margin: 10px 5px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    audio {
-      margin-top: 20px;
-    }
+    .tts-box { margin-top: 40px; text-align: center; }
+    input[type="text"] { padding: 10px; font-size: 16px; border-radius: 8px; border: none; width: 300px; }
+    button { padding: 10px 20px; font-size: 16px; border: none; background-color: #00eaff; color: #000; margin: 10px 5px; border-radius: 8px; cursor: pointer; }
+    audio { margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -206,8 +88,10 @@
     <h1>🎤 Echo Bot</h1>
     <button id="startRecording">Start Recording</button>
     <button id="stopRecording" disabled>Stop Recording</button>
-    <br />
-    <audio id="echoAudio" controls></audio>
+    <audio id="echoAudio" controls style="display: none; margin: 10px auto; display: block;"></audio>
+
+    <div id="uploadStatus" style="margin-top: 10px; font-size: 18px; color: #00ffcc;"></div>
+    <div id="transcriptText" style="margin-top: 15px; font-size: 16px; color: #00eaff;"></div>
   </div>
 
   <script>
@@ -241,10 +125,11 @@
       }
     }
 
-    // ✅ Echo Bot fixed and enhanced
     const startBtn = document.getElementById("startRecording");
     const stopBtn = document.getElementById("stopRecording");
     const echoAudio = document.getElementById("echoAudio");
+    const status = document.getElementById("uploadStatus");
+    const transcriptBox = document.getElementById("transcriptText");
 
     let mediaRecorder;
     let audioChunks = [];
@@ -257,11 +142,33 @@
           audioChunks.push(e.data);
         };
 
-        mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
           const audioUrl = URL.createObjectURL(audioBlob);
           echoAudio.src = audioUrl;
+          echoAudio.style.display = 'block';
           audioChunks = [];
+
+          const formData = new FormData();
+          formData.append("file", audioBlob, "recording.webm");
+
+          try {
+            status.textContent = "Uploading...";
+            const res = await fetch("/transcribe/file", {
+              method: "POST",
+              body: formData
+            });
+
+            const result = await res.json();
+            if (!res.ok || result.error) throw new Error(result.error || "Transcription failed");
+
+            status.textContent = `✅ Uploaded successfully.`;
+            transcriptBox.textContent = `✍ Transcription: ${result.transcript}`;
+          } catch (err) {
+            console.error("Upload/Transcription error:", err);
+            status.textContent = "❌ Upload or transcription failed.";
+            transcriptBox.textContent = "";
+          }
         };
 
         startBtn.onclick = () => {
@@ -269,6 +176,7 @@
           mediaRecorder.start();
           startBtn.disabled = true;
           stopBtn.disabled = false;
+          status.textContent = "🎤 Recording...";
         };
 
         stopBtn.onclick = () => {
