@@ -224,6 +224,8 @@ You can choose **any voice available** from the Murf API for speech synthesis.
 - [Murf Text-to-Speech API Overview](https://murf.ai/api/docs/text-to-speech/overview)
 - [Murf TTS API Reference](https://murf.ai/api/docs/api-reference/text-to-speech/generate)
 
+- 📝 LinkedIn Post for Day 7:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7359525760933486592-gnBw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
 ---
 
 
