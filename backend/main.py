@@ -99,3 +99,42 @@ async def transcribe_file(file: UploadFile = File(...)):
         return {"transcript": transcript.text}  # return just the transcript text
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# 🎯 NEW: Echo endpoint for Day 7
+@app.post("/tts/echo")
+async def tts_echo(file: UploadFile = File(...)):
+    try:
+        # 1️⃣ Read uploaded audio as bytes
+        audio_bytes = await file.read()
+
+        # 2️⃣ Transcribe with AssemblyAI
+        transcript = transcriber.transcribe(audio_bytes)
+        if not transcript.text:
+            raise HTTPException(status_code=400, detail="No speech detected in audio.")
+
+        text_to_speak = transcript.text
+        print(f"📝 Transcript: {text_to_speak}")
+
+        # 3️⃣ Send transcript to Murf API
+        headers = {
+            "api-key": MURF_API_KEY,
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "text": text_to_speak,
+            "voiceId": "en-US-natalie",  # change to any Murf voice you like
+            "format": "mp3"
+        }
+        murf_resp = requests.post(
+            "https://api.murf.ai/v1/speech/generate",
+            headers=headers,
+            json=payload
+        )
+        murf_resp.raise_for_status()
+        murf_data = murf_resp.json()
+
+        # 4️⃣ Return audio URL from Murf
+        return {"audio_url": murf_data.get("audioFile")}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e)) 

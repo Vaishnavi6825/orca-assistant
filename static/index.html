@@ -59,7 +59,7 @@
   <div class="ripple"></div>
   <div class="title">🌊 I’m your Voice Assistant Orca 🌊</div>
 
-  <div class="orca" onclick="showMessage()">
+    <div id="avatar" class="orca" onclick="showMessage()">
     <div class="belly"></div>
     <div class="eye"></div>
     <div class="fin"></div>
@@ -68,7 +68,7 @@
     <div class="mouth-wave"></div>
   </div>
 
-  <div class="message-box" id="orcaMessage">🗨 Howdy! </div>
+  <div class="message-box" id="responseText">🗨 Howdy! </div>
 
   <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
   <div class="bubble" style="left: 20%; animation-delay: 2s;"></div>
@@ -85,7 +85,7 @@
   </div>
 
   <div class="tts-box">
-    <h1>🎤 Echo Bot</h1>
+    <h1>🎤 Echo Bot v2</h1>
     <button id="startRecording">Start Recording</button>
     <button id="stopRecording" disabled>Stop Recording</button>
     <audio id="echoAudio" controls style="display: none; margin: 10px auto; display: block;"></audio>
@@ -142,34 +142,51 @@
           audioChunks.push(e.data);
         };
 
-        mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          echoAudio.src = audioUrl;
-          echoAudio.style.display = 'block';
-          audioChunks = [];
+  mediaRecorder.onstop = async () => {
+  const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+  audioChunks = [];
 
-          const formData = new FormData();
-          formData.append("file", audioBlob, "recording.webm");
+  const formData = new FormData();
+  formData.append("file", audioBlob, "recording.webm");
 
-          try {
-            status.textContent = "Uploading...";
-            const res = await fetch("/transcribe/file", {
-              method: "POST",
-              body: formData
-            });
+  try {
+    status.textContent = "📤 Sending audio to Echo service...";
 
-            const result = await res.json();
-            if (!res.ok || result.error) throw new Error(result.error || "Transcription failed");
+    // Call your Day 7 /tts/echo endpoint
+    const echoRes = await fetch("/tts/echo", {
+      method: "POST",
+      body: formData
+    });
 
-            status.textContent = `✅ Uploaded successfully.`;
-            transcriptBox.textContent = `✍ Transcription: ${result.transcript}`;
-          } catch (err) {
-            console.error("Upload/Transcription error:", err);
-            status.textContent = "❌ Upload or transcription failed.";
-            transcriptBox.textContent = "";
-          }
-        };
+    if (!echoRes.ok) throw new Error("Echo service failed");
+    const echoData = await echoRes.json();
+
+    if (!echoData.audio_url) throw new Error("No audio URL returned");
+
+    // Play the echo audio from Murf
+    echoAudio.src = echoData.audio_url;
+    echoAudio.style.display = "block";
+    await echoAudio.play();
+
+    // Separately transcribe the audio for display
+    status.textContent = "🧠 Transcribing audio...";
+    const transcribeRes = await fetch("/transcribe/file", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!transcribeRes.ok) throw new Error("Transcription failed");
+    const transcribeData = await transcribeRes.json();
+
+    transcriptBox.textContent = `✍ Transcription: ${transcribeData.transcript || "No text detected"}`;
+    status.textContent = "✅ Echo and transcription complete!";
+  } catch (err) {
+    console.error("Error:", err);
+    status.textContent = "❌ Echo or transcription failed.";
+    transcriptBox.textContent = "";
+  }
+};
+
 
         startBtn.onclick = () => {
           audioChunks = [];

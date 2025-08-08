@@ -28,7 +28,7 @@ document.getElementById("avatar").addEventListener("click", () => {
   setTimeout(() => (avatar.style.boxShadow = "0 0 30px #00bfff55"), 1000);
 });
 
-// 🔊 Text-to-Speech (Murf)
+// 🔊 Text-to-Speech (manual input → Murf)
 async function sendText() {
   const text = document.getElementById("ttsInput").value;
   if (!text) return;
@@ -53,44 +53,50 @@ async function sendText() {
   }
 }
 
-// 📤 Upload + Transcribe
+// 📤 Upload + Murf Echo + Transcribe
 async function uploadAudio(blob) {
   const status = document.getElementById("uploadStatus");
-  const transcriptBox = document.getElementById("transcriptionText");
+  const transcriptBox = document.getElementById("transcriptText");
   transcriptBox.style.display = "none";
 
   const formData = new FormData();
   formData.append("file", blob, "recording.webm");
 
   try {
-    // Step 1: Upload
-    status.textContent = "📤 Uploading...";
-    const uploadRes = await fetch("/upload/", {
+    // Step 1: Send to /tts/echo for Murf's voice
+    status.textContent = "📤 Sending to Murf for echo...";
+    const echoRes = await fetch("/tts/echo", {
       method: "POST",
-      body: formData,
+      body: formData
     });
 
-    if (!uploadRes.ok) throw new Error("Upload failed");
-    const uploadData = await uploadRes.json();
+    if (!echoRes.ok) throw new Error("Echo TTS failed");
+    const echoData = await echoRes.json();
+    if (!echoData.audio_url) throw new Error("No audio_url from Murf");
 
-    status.textContent = `✅ Uploaded: ${uploadData.filename} (${(uploadData.size / 1024).toFixed(2)} KB) | 🧠 Transcribing...`;
+    const echoAudio = document.getElementById("echoAudio");
+    echoAudio.src = echoData.audio_url;
+    echoAudio.style.display = "block";
+    await echoAudio.play();
 
-    // Step 2: Transcribe
+    // Step 2: Upload for transcription
+    status.textContent = "🧠 Transcribing...";
     const transcribeRes = await fetch("/transcribe/file", {
       method: "POST",
-      body: formData, // reuse same blob
+      body: formData
     });
 
     if (!transcribeRes.ok) throw new Error("Transcription failed");
     const transcribeData = await transcribeRes.json();
 
-    transcriptBox.textContent = `✍ Transcription: ${result.transcript}`;
+    transcriptBox.textContent = `✍ Transcription: ${transcribeData.text || "No text found"}`;
     transcriptBox.style.display = "block";
-
-    status.textContent += " ✅ Done!";
-  } catch (err) {
+    status.textContent = "✅ Done!";
+  } 
+  catch (err) 
+  {
     console.error("❌ Error:", err);
-    status.textContent = "❌ Upload or transcription failed.";
+    status.textContent = "❌ Murf echo or transcription failed.";
   }
 }
 
@@ -115,12 +121,6 @@ startBtn.addEventListener("click", async () => {
 
     mediaRecorder.onstop = async () => {
       const blob = new Blob(audioChunks, { type: "audio/webm" });
-      const audioUrl = URL.createObjectURL(blob);
-
-      echoAudio.src = audioUrl;
-      echoAudio.style.display = "block";
-      echoAudio.play();
-
       await uploadAudio(blob);
     };
 
