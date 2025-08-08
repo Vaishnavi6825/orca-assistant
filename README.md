@@ -192,6 +192,40 @@ Once I stop recording:
 
 ---
 
+# 🚀Day 7: Echo Bot v2
+For Day 7, the Echo Bot is upgraded to **repeat back what you said in a Murf AI voice** instead of simply replaying the recorded audio.
+
+### Key Features:
+- Records audio from the user
+- Sends the audio to the backend `/tts/echo` endpoint
+- Uses AssemblyAI to transcribe the audio into text
+- Sends the transcription text to Murf API to generate natural-sounding speech
+- Returns the Murf-generated audio URL
+- Plays the Murf audio in the `<audio>` element on the frontend
+
+You can choose **any voice available** from the Murf API for speech synthesis.
+
+## Endpoint
+
+- **`POST /tts/echo`**  
+  Accepts audio file input, transcribes it, generates Murf voice audio, and returns the audio URL.
+
+## How to Use
+
+1. Record your voice in the frontend UI.
+2. The audio is sent to the backend `/tts/echo` endpoint.
+3. Backend processes transcription and speech synthesis.
+4. The Murf audio URL is returned and played back in the UI.
+
+## Resources
+
+- [FastAPI File Upload Tutorial](https://fastapi.tiangolo.com/tutorial/request-files/)
+- [AssemblyAI Python SDK Examples](https://github.com/AssemblyAI/assemblyai-python-sdk?tab=readme-ov-file#core-examples)
+- [Murf Text-to-Speech API Overview](https://murf.ai/api/docs/text-to-speech/overview)
+- [Murf TTS API Reference](https://murf.ai/api/docs/api-reference/text-to-speech/generate)
+
+---
+
 
 
 
