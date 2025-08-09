@@ -244,6 +244,7 @@ I integrated **Google’s Gemini LLM API** into the backend, giving my agent rea
 - [Google Generative AI Python Client](https://lnkd.in/gsDsPe75)
 - [Gemini API Docs](https://lnkd.in/g2RtkDwc)
 
+
 - 📝 LinkedIn Post for Day 8:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7359856944498528256-wzIx?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
 
 ---
