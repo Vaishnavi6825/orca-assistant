@@ -228,6 +228,25 @@ You can choose **any voice available** from the Murf API for speech synthesis.
 
 ---
 
+# Day 8 - My Voice Agent Just Got a Brain Transplant! 🧠⚡
+
+Up until now, my voice agent could listen 🎧 and talk 🗣️ — but today… it can THINK.
+
+I integrated **Google’s Gemini LLM API** into the backend, giving my agent real intelligence for conversations, Q&A, storytelling, and more!
+
+## 💡 What’s New Today
+- 🔹 Built a `POST /llm/query` endpoint in my Python server.
+- 🔹 Accepts any text input → sends it to Gemini → returns a smart, human-like reply.
+- 🔹 No UI changes needed — just pure backend magic.
+- 🔹 Now ready for AI tutors, story generators, research bots, and beyond!
+
+## 📒 Resources Used
+- [Google Generative AI Python Client](https://lnkd.in/gsDsPe75)
+- [Gemini API Docs](https://lnkd.in/g2RtkDwc)
+
+- 📝 LinkedIn Post for Day 8:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7359856944498528256-wzIx?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
 
 
 
