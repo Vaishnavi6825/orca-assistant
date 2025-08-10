@@ -249,6 +249,27 @@ I integrated **Google’s Gemini LLM API** into the backend, giving my agent rea
 
 ---
 
+# Day 9 - Orca AI Assistant - Live Interaction 🐋👀
+
+Today my voice agent got a *face*… and it’s watching you!  
+I built a **playful animated Orca AI Assistant** with **eye tracking** and **live responses**.
+
+## 💡 What’s New Today
+- 🎙️ Integrated voice recording & real-time playback with the backend.
+- 💬 Now my AI feels *alive* while responding — not just a text box anymore!
+- ✨ Fun, interactive experience ready for demos and user engagement.
+
+## 📂 Features
+- HTML/CSS Orca assistant UI  
+- Voice recording → backend processing → playback  
+- Works with my AI backend for smart replies
+
+📝 LinkedIn Post for Day 9: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7360232334647873536-a-I_?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+
+
 
 
 
