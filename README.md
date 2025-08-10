@@ -192,6 +192,62 @@ Once I stop recording:
 
 ---
 
+# 🚀Day 7: Echo Bot v2
+For Day 7, the Echo Bot is upgraded to **repeat back what you said in a Murf AI voice** instead of simply replaying the recorded audio.
+
+### Key Features:
+- Records audio from the user
+- Sends the audio to the backend `/tts/echo` endpoint
+- Uses AssemblyAI to transcribe the audio into text
+- Sends the transcription text to Murf API to generate natural-sounding speech
+- Returns the Murf-generated audio URL
+- Plays the Murf audio in the `<audio>` element on the frontend
+
+You can choose **any voice available** from the Murf API for speech synthesis.
+
+## Endpoint
+
+- **`POST /tts/echo`**  
+  Accepts audio file input, transcribes it, generates Murf voice audio, and returns the audio URL.
+
+## How to Use
+
+1. Record your voice in the frontend UI.
+2. The audio is sent to the backend `/tts/echo` endpoint.
+3. Backend processes transcription and speech synthesis.
+4. The Murf audio URL is returned and played back in the UI.
+
+## Resources
+
+- [FastAPI File Upload Tutorial](https://fastapi.tiangolo.com/tutorial/request-files/)
+- [AssemblyAI Python SDK Examples](https://github.com/AssemblyAI/assemblyai-python-sdk?tab=readme-ov-file#core-examples)
+- [Murf Text-to-Speech API Overview](https://murf.ai/api/docs/text-to-speech/overview)
+- [Murf TTS API Reference](https://murf.ai/api/docs/api-reference/text-to-speech/generate)
+
+- 📝 LinkedIn Post for Day 7:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7359525760933486592-gnBw?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# Day 8 - My Voice Agent Just Got a Brain Transplant! 🧠⚡
+
+Up until now, my voice agent could listen 🎧 and talk 🗣️ — but today… it can THINK.
+
+I integrated **Google’s Gemini LLM API** into the backend, giving my agent real intelligence for conversations, Q&A, storytelling, and more!
+
+## 💡 What’s New Today
+- 🔹 Built a `POST /llm/query` endpoint in my Python server.
+- 🔹 Accepts any text input → sends it to Gemini → returns a smart, human-like reply.
+- 🔹 No UI changes needed — just pure backend magic.
+- 🔹 Now ready for AI tutors, story generators, research bots, and beyond!
+
+## 📒 Resources Used
+- [Google Generative AI Python Client](https://lnkd.in/gsDsPe75)
+- [Gemini API Docs](https://lnkd.in/g2RtkDwc)
+
+
+- 📝 LinkedIn Post for Day 8:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7359856944498528256-wzIx?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
 
 
 
