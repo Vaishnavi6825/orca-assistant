@@ -56,19 +56,17 @@
   </style>
 </head>
 <body>
+
   <div class="ripple"></div>
   <div class="title">🌊 I’m your Voice Assistant Orca 🌊</div>
-
-    <div id="avatar" class="orca" onclick="showMessage()">
-    <div class="belly"></div>
-    <div class="eye"></div>
-    <div class="fin"></div>
-    <div class="tail"></div>
-    <div class="flipper"></div>
-    <div class="mouth-wave"></div>
+  <div id="avatar" class="orca" onclick="showMessage()">
+  <div class="belly"></div>
+  <div class="eye"></div>
+  <div class="fin"></div>
+  <div class="tail"></div>
+  <div class="flipper"></div>
+  <div class="mouth-wave"></div>
   </div>
-
-  <div class="message-box" id="responseText">🗨 Howdy! </div>
 
   <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
   <div class="bubble" style="left: 20%; animation-delay: 2s;"></div>
@@ -83,8 +81,7 @@
     <br />
     <audio id="ttsAudio" controls></audio>
   </div>
-
-  <div class="tts-box">
+<div class="tts-box">
     <h1>🎤 Echo Bot v2</h1>
     <button id="startRecording">Start Recording</button>
     <button id="stopRecording" disabled>Stop Recording</button>
@@ -150,45 +147,41 @@
   formData.append("file", audioBlob, "recording.webm");
 
   try {
-    status.textContent = "📤 Sending audio to Echo service...";
+    status.textContent = "📤 Sending audio to Orca ...";
 
-    // Call your Day 7 /tts/echo endpoint
-    const echoRes = await fetch("/tts/echo", {
+    // Call Day 9 /llm/query/audio endpoint
+    const res = await fetch("/llm/query/audio", {
       method: "POST",
       body: formData
     });
 
-    if (!echoRes.ok) throw new Error("Echo service failed");
-    const echoData = await echoRes.json();
+    if (!res.ok) throw new Error("Day 9 request failed");
+    const data = await res.json();
 
-    if (!echoData.audio_url) throw new Error("No audio URL returned");
+    // Show transcript and LLM response
+    transcriptBox.innerHTML = `
+      ✍ Transcription: ${data.transcript || "No text detected"}<br>
+      🤖 LLM Response: ${data.llm_response || "No response"}
+    `;
 
-    // Play the echo audio from Murf
-    echoAudio.src = echoData.audio_url;
-    echoAudio.style.display = "block";
-    await echoAudio.play();
+    // Play Murf audio reply
+    if (data.audio_url) {
+      echoAudio.src = data.audio_url;
+      echoAudio.style.display = "block";
+      await echoAudio.play().catch(() => {
+        console.warn("User interaction may be required to play audio.");
+      });
+    }
 
-    // Separately transcribe the audio for display
-    status.textContent = "🧠 Transcribing audio...";
-    const transcribeRes = await fetch("/transcribe/file", {
-      method: "POST",
-      body: formData
-    });
-
-    if (!transcribeRes.ok) throw new Error("Transcription failed");
-    const transcribeData = await transcribeRes.json();
-
-    transcriptBox.textContent = `✍ Transcription: ${transcribeData.transcript || "No text detected"}`;
-    status.textContent = "✅ Echo and transcription complete!";
+    status.textContent = "✅ Orca replied successfully!";
   } catch (err) {
     console.error("Error:", err);
-    status.textContent = "❌ Echo or transcription failed.";
+    status.textContent = "❌ Day 9 interaction failed.";
     transcriptBox.textContent = "";
   }
 };
 
-
-        startBtn.onclick = () => {
+startBtn.onclick = () => {
           audioChunks = [];
           mediaRecorder.start();
           startBtn.disabled = true;

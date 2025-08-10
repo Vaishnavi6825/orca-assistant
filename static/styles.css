@@ -84,3 +84,15 @@ body {
   color: #00ffcc;
   text-shadow: 0 0 6px #00ffccaa;
 }
+
+.outer-box {
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 900px;
+  width: 95%;
+  margin: 40px auto;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
