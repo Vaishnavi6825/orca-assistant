@@ -268,6 +268,97 @@ I built a **playful animated Orca AI Assistant** with **eye tracking** and **liv
 
 ---
 
+# Day 10 | My AI Voice Agent Now Remembers Conversations! 🧠🎙️
+
+## 🚀 Overview
+Today’s milestone brings **memory** to my AI Voice Assistant!  
+By introducing **chat history with session IDs**, the assistant now engages in **natural, context-aware conversations** — just like talking to a real person.
+
+
+## ✨ Features
+- **Chat History Memory** 🗂️  
+  Stores all previous messages in a session for continuity.
+
+- **Multi-Turn Conversations** 💬  
+  The assistant remembers past messages, making responses more relevant.
+
+- **Automatic Workflow** ⚡  
+  1. Stores conversation history  
+  2. Transcribes new audio inputs  
+  3. Sends the **full conversation** to the LLM  
+  4. Gets a response  
+  5. Converts it to speech (TTS)  
+  6. Plays it back automatically
+
+- **Seamless UI Flow** 🎨  
+  - Saves `session_id` in the browser  
+  - Automatically starts recording right after the assistant speaks  
+  - Smooth back-and-forth interaction without clicks
+
+-📝 LinkedIn Post for Day 10:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7360725367713640450-4MAv?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🚀 Day 11 | Building a Resilient AI Voice Agent 🛡️🎙️
+
+## 📌 Overview
+Have you ever wondered what happens to an AI voice agent when one of its **core services** unexpectedly fails?  
+A crash? Silent failure? Bad user experience?  
+
+Today’s milestone focuses on **resilience** — ensuring that even when key APIs fail, the AI voice agent continues to deliver a smooth and user-friendly experience.
+
+---
+
+## ✨ Key Improvements
+### 💠 Robust Error Handling
+I implemented **graceful failure management** for a multi-API voice agent.  
+The system can now handle failures in:
+- **Speech-to-Text (STT)** API
+- **Large Language Model (LLM)** API
+- **Text-to-Speech (TTS)** API
+
+### 💠 Failure Simulation
+To test resilience, I deliberately simulated failures by **commenting out the `GEMINI_API_KEY` and `ASSEMBLYAI_API_KEY`**.
+
+---
+
+## 🔍 What Happens During a Failure?
+### **Server-Side**
+- **Error Capture:** A `try...except` block catches the failure.
+- **Structured Response:** Instead of a generic `500 Internal Server Error`, the server returns:
+  ```json
+  {
+    "error": "Missing GEMINI_API_KEY, ASSEMBLYAI_API_KEY",
+    "fallback_audio_url": "https://example.com/fallback.mp3"
+  }
+-📝 LinkedIn Post for Day 11:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7360969484439859200-3FXz?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# ✨ Day 12 | Revamping the UI 🎨🎙️
+
+## 📌 Overview
+Today’s focus was on **UI transformation** for the conversational voice assistant — making it **simpler, smarter, and more user-friendly**.
+
+## ✨ Key Changes
+### 🗑️ Removed Unnecessary Sections
+- Removed the **initial text-to-speech** and **echo bot** sections to keep the interface focused on the **core voice assistant**.
+
+### 🎛️ Unified Recording Control
+- Merged **"Start Recording"** and **"Stop Recording"** into a **single dynamic button**.
+- Button now **changes appearance** based on recording status.
+- **Auto-play** for audio responses — no more extra clicks to hear the assistant.
+
+### 🎨 Visual Enhancements
+- **Prominent mic button** with glowing effect on interaction.
+- **Clean, centered layout** for both the agent and chat area.
+- **Subtle animations** to make the interface feel more alive and engaging.
+
+-📝 LinkedIn Post for Day 12:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7361353928556376064-3h3-?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+
 
 
 
