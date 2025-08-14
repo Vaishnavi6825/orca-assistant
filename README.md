@@ -362,16 +362,12 @@ Today’s focus was on **UI transformation** for the conversational voice assist
 
 Today, I created a **comprehensive `README.md`** for my **AI Voice Agent** project.
 
----
-
 ## ✅ What the Documentation Covers
 - **Project overview & features**
 - **Tech stack & architecture**
 - **Step-by-step setup instructions**
 - **Required environment variables**
 - **Screenshots for better clarity**
-
----
 
 ## 🖋 Why Documentation Matters
 Good documentation isn’t just a formality — it’s a **roadmap** for anyone using or contributing to your project.
