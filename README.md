@@ -4,7 +4,8 @@
 
 An interactive AI-powered voice assistant that listens to your speech, processes it using advanced AI models, and responds with natural-sounding speech.
 
-![Orca Assistant Screenshot](static/orca-demo.jpg)
+<img width="1251" height="684" alt="image" src="https://github.com/user-attachments/assets/2c865684-b67f-432f-9069-df3d9b1eb6a2" />
+
 
 This project integrates multiple advanced AI services and technologies:
 
