@@ -1,165 +1,155 @@
-// =============================
-// Day 9 - Orca AI Assistant JS
-// =============================
 
-// Ensure the code is wrapped in a DOMContentLoaded listener
-// to prevent errors if the script loads before the HTML elements.
-document.addEventListener("DOMContentLoaded", () => {
-  // 👀 Eye tracking for the Orca
-  // This logic is adapted for the `::after` pseudo-element used as the pupil.
-  document.addEventListener("mousemove", (e) => {
-    document.querySelectorAll(".eye").forEach((eye) => {
-      const rect = eye.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-      // The CSS transforms the pseudo-element relative to the parent.
-      // We apply the transform to the parent `.eye` element.
-      eye.style.transform = `translate(${Math.cos(angle) * 8}px, ${Math.sin(angle) * 8}px)`;
-    });
-  });
+    // =============================
+    // Day 12 - UI Revamp JS
+    // =============================
 
-  // 🐳 Orca Assistant click event
-  // The HTML already has an onclick attribute, but this listener provides a more
-  // robust way to handle the click event and visual feedback.
-  const orcaAvatar = document.getElementById("avatar");
-  const responseText = document.getElementById("responseText");
-  orcaAvatar.addEventListener("click", () => {
-    responseText.innerText = "🗨 How can I help you? ";
-    responseText.style.display = "block";
+    // 🔑 Get or create a session ID for persistent chat memory
+    function getSessionId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let sessionId = urlParams.get("session_id");
 
-    orcaAvatar.style.boxShadow = "0 0 40px #00eaff";
-    setTimeout(() => (orcaAvatar.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.3)"), 1000);
-  });
-
-  // 🔊 Text-to-Speech (manual input)
-  // This function is called from the 'Speak' button's onclick attribute.
-  async function sendText() {
-    const text = document.getElementById("ttsInput").value;
-    if (!text) return;
-
-    try {
-      const payload = {
-        text: text,
-        voiceId: "en-US-natalie" // This matches the voiceId in your backend
-      };
-
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) throw new Error("TTS API request failed.");
-      const data = await response.json();
-      const audioPlayer = document.getElementById("ttsAudio");
-
-      if (!data.audioFile) throw new Error("No audio file returned from Murf.");
-      audioPlayer.src = data.audioFile;
-      audioPlayer.style.display = "block";
-      await audioPlayer.play().catch(e => {
-        console.warn("Audio playback was blocked. User interaction required.", e);
-      });
-    } catch (err) {
-      console.error("TTS Error:", err);
-      // Use a custom message box instead of alert()
-      // You can add a div for this and style it
-      const errorMessage = document.createElement('div');
-      errorMessage.textContent = "Failed to generate audio. Check the console for details.";
-      errorMessage.style.cssText = "position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff0000; color: white; padding: 10px 20px; border-radius: 5px; z-index: 9999;";
-      document.body.appendChild(errorMessage);
-      setTimeout(() => errorMessage.remove(), 5000);
-    }
-  }
-  // Expose sendText to the global scope so the HTML `onclick` can find it.
-  window.sendText = sendText;
-
-  // 🎤 Echo Bot v2 functionality (Audio -> Whisper -> LLM -> Murf TTS)
-  let mediaRecorder;
-  let audioChunks = [];
-
-  const startBtn = document.getElementById("startRecording");
-  const stopBtn = document.getElementById("stopRecording");
-  const echoAudio = document.getElementById("echoAudio");
-  const status = document.getElementById("uploadStatus");
-  const transcriptBox = document.getElementById("transcriptText");
-
-  // Get microphone access and set up the MediaRecorder
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      mediaRecorder = new MediaRecorder(stream);
-
-      mediaRecorder.ondataavailable = e => {
-        audioChunks.push(e.data);
-      };
-
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        audioChunks = [];
-
-        const formData = new FormData();
-        formData.append("file", audioBlob, "recording.webm");
-
-        try {
-          status.textContent = "📤 Sending audio to Orca ...";
-          transcriptBox.textContent = ""; // Clear previous transcript
-          echoAudio.style.display = "none"; // Hide previous audio player
-
-          // Call the `/llm/query/audio` endpoint from your main.py
-          const res = await fetch("/llm/query/audio", {
-            method: "POST",
-            body: formData
-          });
-
-          if (!res.ok) throw new Error(`Backend request failed with status: ${res.status}`);
-          const data = await res.json();
-
-          // Display the transcript and LLM response
-          transcriptBox.innerHTML = `
-            ✍ Transcription: ${data.transcript || "No text detected"}<br>
-            🤖 LLM Response: ${data.llm_response || "No response"}
-          `;
-
-          // Play the Murf audio reply
-          if (data.audio_url) {
-            echoAudio.src = data.audio_url;
-            echoAudio.style.display = "block";
-            await echoAudio.play().catch(e => {
-              console.warn("Audio playback was blocked. User interaction required.", e);
-            });
-          }
-
-          status.textContent = "✅ Orca replied successfully!";
-        } catch (err) {
-          console.error("Error:", err);
-          status.textContent = "❌ Day 9 interaction failed.";
-          transcriptBox.textContent = "Error: See console for details.";
+        if (!sessionId) {
+            sessionId = crypto.randomUUID();
+            urlParams.set("session_id", sessionId);
+            window.history.replaceState({}, "", `${location.pathname}?${urlParams}`);
         }
-      };
+        return sessionId;
+    }
+    const sessionId = getSessionId();
 
-      // Event listeners for the record buttons
-      startBtn.onclick = () => {
-        audioChunks = [];
-        mediaRecorder.start();
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        status.textContent = "🎤 Recording...";
-      };
+    document.addEventListener("DOMContentLoaded", () => {
+        // 👀 Eye tracking for the Orca
+        document.addEventListener("mousemove", (e) => {
+            document.querySelectorAll(".eye").forEach((eye) => {
+                const rect = eye.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+                eye.style.transform = `translate(${Math.cos(angle) * 8}px, ${Math.sin(angle) * 8}px)`;
+            });
+        });
 
-      stopBtn.onclick = () => {
-        mediaRecorder.stop();
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
-        status.textContent = "🛑 Stopped. Processing...";
-      };
-    })
-    .catch(err => {
-      console.error("Microphone access error:", err);
-      // Use a custom message box instead of alert()
-      const errorMessage = document.createElement('div');
-      errorMessage.textContent = "Microphone access is required to use the Echo Bot.";
-      errorMessage.style.cssText = "position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ff0000; color: white; padding: 10px 20px; border-radius: 5px; z-index: 9999;";
-      document.body.appendChild(errorMessage);
-      setTimeout(() => errorMessage.remove(), 5000);
+        // 🐳 Orca Assistant click event
+        const orcaAvatar = document.getElementById("avatar");
+        const responseText = document.getElementById("responseText");
+        if (orcaAvatar && responseText) {
+            orcaAvatar.addEventListener("click", () => {
+                responseText.innerText = "🗨 How can I help you? ";
+                responseText.style.display = "block";
+                orcaAvatar.style.boxShadow = "0 0 40px #00eaff";
+                setTimeout(() => (orcaAvatar.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.3)"), 1000);
+            });
+        }
+    
+        // 🎤 Conversational Agent logic
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const recordButton = document.getElementById("recordButton");
+        const echoAudio = document.getElementById("echoAudio");
+        const statusDiv = document.getElementById("status");
+        const chatHistoryDiv = document.getElementById("chatHistory");
+
+        // Append a message bubble to chat history
+        function appendChatMessage(role, text) {
+            const div = document.createElement("div");
+            div.classList.add("chat-message");
+            div.classList.add(role === "user" ? "user-msg" : "assistant-msg");
+            div.textContent = (role === "user" ? "You: " : "Orca: ") + text;
+            chatHistoryDiv.appendChild(div);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+        }
+
+        // Update chat history UI from full history array
+        function updateChatHistory(history) {
+            chatHistoryDiv.innerHTML = "";
+            history.forEach(msg => {
+                appendChatMessage(msg.role, msg.content);
+            });
+        }
+
+        // Main function to handle recording and API calls
+        async function toggleRecording() {
+            if (isRecording) {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                recordButton.classList.remove("recording");
+                statusDiv.textContent = "🛑 Stopped. Processing...";
+                recordButton.disabled = true; // Disable button while processing
+            } else {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        audioChunks = [];
+                        const formData = new FormData();
+                        formData.append("file", audioBlob, "recording.webm");
+
+                        try {
+                            statusDiv.textContent = "📤 Sending audio to Orca...";
+                            const res = await fetch(`/agent/chat/${sessionId}`, {
+                                method: "POST",
+                                body: formData
+                            });
+
+                            if (!res.ok) {
+                                const errorData = await res.json();
+                                throw new Error(errorData.detail || "Backend request failed");
+                            }
+
+                            const data = await res.json();
+
+                            if (data.error) {
+                                console.error("Server-side error:", data.error);
+                                statusDiv.textContent = "❌ Interaction failed.";
+                                if (data.audio_url) {
+                                    echoAudio.src = data.audio_url;
+                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
+                                }
+                            } else {
+                                if (data.chat_history) {
+                                    updateChatHistory(data.chat_history);
+                                }
+                                if (data.audio_url) {
+                                    echoAudio.src = data.audio_url;
+                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
+                                    echoAudio.onended = () => {
+                                        console.log("Bot finished talking, ready for next prompt.");
+                                        recordButton.disabled = false; // Re-enable the button
+                                        statusDiv.textContent = "Click to speak...";
+                                    };
+                                } else {
+                                    console.warn("No audio URL received.");
+                                    recordButton.disabled = false;
+                                    statusDiv.textContent = "Click to speak...";
+                                }
+                                statusDiv.textContent = "✅ Orca replied successfully!";
+                            }
+                        } catch (err) {
+                            console.error("Error:", err);
+                            statusDiv.textContent = "❌ Interaction failed.";
+                            recordButton.disabled = false; // Re-enable on error
+                        }
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordButton.classList.add("recording");
+                    statusDiv.textContent = "🎤 Recording...";
+                } catch (err) {
+                    console.error("Microphone access error:", err);
+                    statusDiv.textContent = "❌ Microphone access denied.";
+                    recordButton.disabled = true;
+                }
+            }
+        }
+        
+        // Add the click listener to the single button
+        recordButton.addEventListener("click", toggleRecording);
+
     });
-});
