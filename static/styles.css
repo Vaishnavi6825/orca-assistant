@@ -7,7 +7,6 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,3 +95,11 @@ body {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
+.orca-fixed {
+  position: fixed;
+  left: 50%;
+  bottom: 30px; /* Adjust as needed */
+  transform: translateX(-50%);
+  z-index: 1001;
+  /* Optional: pointer-events if you want it clickable */
+}
