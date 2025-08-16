@@ -590,6 +590,30 @@ This modular approach makes the codebase much cleaner and easier to navigate.
 A **clean, well-organized codebase** is the difference between a quick prototype and a **long-term, scalable project**.  
 It’s a **roadmap for collaboration** and a testament to good development practices.
 
+-📝 LinkedIn Post for Day 14:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7362101312450150400-lV2M?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🚀 Day 15 | WebSockets in Action 🌐
+
+We’ve officially hit the **halfway mark** of my *30 Days of AI Voice Agents* challenge — and today was all about **real-time communication**. 🎉  
+
+## 💠 Today’s Focus: WebSockets
+I implemented a **`/ws` WebSocket endpoint** on my FastAPI server. Using Postman, I was able to:  
+
+- ✅ Establish a WebSocket connection  
+- ✅ Send messages from the client  
+- ✅ Receive echoed responses back from the server in real-time  
+
+## 🛠️ Development Tip
+To keep my codebase clean, I followed the tip of creating a **new branch called `streaming`** so that my non-streaming code remains unaffected.  
+This small step goes a long way in ensuring maintainability and smoother development. 💡  
+
+## ✨ Why this matters
+WebSockets enable **persistent, low-latency communication**, which is critical for building **responsive voice agents** and **interactive AI systems**.  
+
+-📝 LinkedIn Post for Day 15:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7362445172187521024-A5vV?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
 ---
 
 
