@@ -616,6 +616,71 @@ WebSockets enable **persistent, low-latency communication**, which is critical f
 
 ---
 
+# Day 16 | Streaming Audio with WebSockets 🎙️
+
+Today, I extended my WebSocket implementation to handle **real-time audio streaming** from the client to the server.  
+Instead of batching audio chunks, the client now sends audio data over **WebSockets** at regular intervals — and the **FastAPI** server saves it directly into a file.  
+
+## 💠 Today’s Focus: Audio Streaming
+- 🎤 **Client**: Records audio & streams it live over WebSockets  
+- 🌐 **Server**: Receives binary audio data & writes it into a `.webm` file  
+- ✅ **Verified** that audio is received correctly and stored without data loss  
+
+## ✨ Why this matters
+This is the **foundation for real-time speech processing** in voice agents.  
+
+By streaming audio continuously instead of waiting for full uploads, we unlock possibilities like:
+- 🎙️ Live transcription  
+- ⚡ Instant responses  
+- 🤖 Truly interactive AI systems  
+
+-📝 LinkedIn Post for Day 16:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7362846139273895937-vdjU?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# Day 17 | Real-time Voice Transcription 🚀
+
+For **Day 17** of the **#30DaysOfVoiceAgents** challenge, I’ve leveled up my AI assistant by integrating **AssemblyAI’s Python SDK** to handle **streaming audio transcription**.  
+
+Yesterday was about **sending audio to the server via WebSockets**;  
+today is about **understanding it in real-time**.  
+
+## 🔑 Key Achievements
+- 🔹 **Set up a WebSocket server** to receive continuous audio streams from the client  
+- 🔹 Integrated **AssemblyAI’s Python SDK** to transcribe incoming audio live  
+- 🔹 Ensured audio conversion to **16kHz, 16-bit, mono PCM** format (required for streaming API)  
+- 🔹 Verified that spoken words appear as **text on the server console almost instantly**  
+
+## ✨ Why this matters
+This is a **massive step** towards creating a **truly interactive and responsive voice agent**.  
+With **real-time transcription**, we unlock:  
+- 🎙️ Instant speech-to-text feedback  
+- ⚡ Faster response loops  
+- 🤖 Natural, conversational AI experiences
+
+-📝 LinkedIn Post for Day 17:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-buildwithmurf-30daysofvoiceagents-activity-7363418209875628034-sONy?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# Day 18 | Turn Detection 🗣️
+
+For **Day 18** of the **#30DaysOfVoiceAgents** challenge, my AI agent became a **better listener**!  
+No more clicking the stop button — the agent now uses **automatic Turn Detection** powered by **AssemblyAI’s streaming API**.  
+
+## 🔑 Key Achievements
+- 🤖 Implemented **automatic turn detection** to know when I’ve finished speaking  
+- 📝 The `"end of turn"` signal now **finalizes the transcript** automatically  
+- ⚡ Triggers the AI’s **response instantly** without manual intervention  
+- 🎯 Creates a **seamless, hands-free experience** that feels natural and intuitive  
+
+## ✨ Why this matters
+Turn detection is the secret ingredient that makes conversations feel **human** rather than robotic.  
+It ensures:
+- 🗣️ Smooth, flowing dialogue  
+- 🚫 No need for extra clicks or interruptions  
+- 🔄 More natural back-and-forth with the AI
+
+-📝 LinkedIn Post for Day 18:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-buildwithmurf-30daysofvoiceagents-activity-7363525982730792960-VI86?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
 
 
 
