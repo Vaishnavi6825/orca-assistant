@@ -682,6 +682,30 @@ It ensures:
 
 -📝 LinkedIn Post for Day 18:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-buildwithmurf-30daysofvoiceagents-activity-7363525982730792960-VI86?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
 
+---
+
+# Day 19: Streaming LLM Responses
+
+Today's task focused on enhancing user experience by implementing **streaming LLM responses** in a voice assistant project.
+
+## Overview
+
+Instead of waiting for the assistant to generate an entire response, the LLM now streams its output **word-by-word in real-time**. This significantly reduces perceived latency, making the interaction feel faster and more natural.
+
+## How It Works
+
+1. **Capture Audio Transcript**  
+   The final user audio is transcribed using **AssemblyAI**.
+
+2. **Send Transcript to LLM**  
+   The Python backend (built with **FastAPI**) sends this transcript to **Google's Gemini API** with streaming enabled.
+
+3. **Receive Streaming Response**  
+   The server receives the response in **chunks** and prints each chunk to the console immediately as it arrives.
+
+-📝 LinkedIn Post for Day 19:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7363899568645681152-Czrb?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
 
 
 
