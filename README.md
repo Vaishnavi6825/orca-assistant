@@ -707,6 +707,30 @@ Instead of waiting for the assistant to generate an entire response, the LLM now
 
 ---
 
+# Day 20: Murf WebSockets 🚀
+
+There’s something genuinely exciting about seeing raw data stream into the console.  
+Today, I connected the dots in my **AI Voice Agent** project:  
+
+## 🔹 What I Built
+- 🎙️ Captured my voice with **AssemblyAI**  
+- ✍️ Generated a streaming text response from **Gemini**  
+- 🔊 Piped that text, **chunk-by-chunk**, to the **Murf AI TTS WebSocket**  
+- 🎧 Received the voice back as a **real-time stream of base64 audio**  
+- 🔄 Used a **static `context_id`** to avoid session limit errors and maintain a single streaming context  
+
+## ⚡ Key Learning
+This task was a **fantastic exercise in handling asynchronous communication**.  
+Building this agent piece by piece has been an **amazing learning journey**.  
+
+👉 On to the final **10 days**!  
+
+## 📚 Resource
+- [Murf AI WebSocket Streaming Guide](https://lnkd.in/gtaT3Rxr)
+
+-📝 LinkedIn Post for Day 20:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7364287244892819456-JWKb?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
 
 
 
