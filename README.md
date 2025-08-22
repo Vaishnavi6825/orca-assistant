@@ -732,6 +732,34 @@ Building this agent piece by piece has been an **amazing learning journey**.
 
 ---
 
+## 🗓️ Day 21: Streaming Audio Data to the Client
+
+Today's goal was to build a real-time, bidirectional audio pipeline. The core task was to stream audio data captured on the browser (**client**) directly back from the **server** over WebSockets, laying the groundwork for more complex real-time interactions.
+
+### ✨ Key Accomplishments
+
+* **Bidirectional WebSocket Stream:** Successfully configured the Python FastAPI server to receive raw audio chunks and immediately stream them back to the connected client.
+* **Real-time Encoding:** Implemented on-the-fly Base64 encoding of audio chunks on the server before transmission.
+* **Client-Side Acknowledgment:** The JavaScript client now listens for these streamed chunks and prints an acknowledgment to the browser console, confirming the pipeline is working.
+* **Seamless Integration:** This new streaming feature was added without disrupting the existing functionality from Day 20, such as live transcription and the final conversational turn processing.
+
+### ⚙️ How It Works
+
+The architecture for this feature follows a simple yet powerful "echo" pattern, which serves as a proof-of-concept for future TTS streaming:
+
+1.  The **Client** (Browser) captures raw microphone audio and sends it to the server's `/ws` endpoint in small chunks.
+2.  The **Server** (Python/FastAPI) receives each chunk.
+3.  Inside the WebSocket handler, the server encodes the binary audio data into a text-friendly Base64 string.
+4.  The server then wraps this Base64 string in a JSON message and sends it right back to the client over the same WebSocket connection.
+5.  The **Client's** JavaScript receives the message, confirms its type, and logs an acknowledgment to the developer console.
+
+This is more than just an echo; it's the fundamental building block that will allow the assistant's voice to be generated and played chunk-by-chunk for a natural, low-latency conversation in later stages.
+
+-📝 LinkedIn Post for Day 21:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7364699929404985344-G57F?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+
 
 
 
