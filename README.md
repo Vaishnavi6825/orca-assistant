@@ -758,6 +758,184 @@ This is more than just an echo; it's the fundamental building block that will al
 -📝 LinkedIn Post for Day 21:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7364699929404985344-G57F?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
 
 ---
+# 🗓️ Day 22 | Real-time Voice with Streaming Audio Playback  
+
+Today’s challenge in the **#30DaysofVoiceAgents** series was all about making the AI agent sound alive 🎙️✨  
+
+## 🚀 What I Built  
+Instead of waiting for the full audio file to generate, I implemented a **streaming playback engine** using the **Web Audio API**.  
+
+### 🔊 Key Features  
+- **Instant Playback** → As soon as the first chunk of speech arrives, playback begins immediately.  
+- **No Awkward Pauses** → Eliminates the delay caused by waiting for the full audio file.  
+- **Seamless Flow** → Each audio chunk is stitched together in real-time for a smooth and natural voice.  
+
+## 🛠️ Tech Highlights  
+- **Web Audio API** for real-time audio decoding & playback  
+- **Chunk-based streaming** for low-latency voice response  
+- **Continuous audio buffering** to ensure natural flow  
+
+## 🌊 Result  
+The agent now feels **more human-like** with **real-time voice streaming** — responding instantly and keeping the conversation alive.  
+
+-📝 LinkedIn Post for Day 22: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofvoiceagents-buildwithmurf-30daysofvoiceagents-activity-7364959396042379264-fkLl?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 23 – Complete Voice Agent  
+
+Today I connected everything **end-to-end** — and my **Orca assistant** is officially chatting in real time 🐳🎙️  
+
+## 🚀 What It Does  
+
+### 🎤 Listen  
+Captures my voice and transcribes it live (**AssemblyAI**).  
+
+### 🧠 Think  
+Sends the transcript to the LLM and generates a response (**Gemini**).  
+
+### 💬 Remember  
+Saves chat history so the conversation stays **coherent across turns**.  
+
+### 🗣️ Speak  
+Sends the reply to **Murf TTS** and streams audio chunk-by-chunk to the browser.  
+
+### ⚡ Feel Instant  
+Playback starts on the **very first audio chunk** — no waiting for full files.  
+
+-📝 LinkedIn Post for Day 23: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7365412571652255744-rEAI?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 24 – Giving My AI a Soul: The Orca Persona 🐳  
+
+Today, I moved beyond the mechanics and gave my voice agent a **heart**.  
+My assistant now embodies **Orca**, a character inspired by the wise and gentle whale from *Free Willy*.  
+
+It’s incredible how a **detailed persona prompt** can completely transform the interaction.  
+
+## 🌊 How the Persona Comes to Life  
+
+### 🧠 Think with Personality  
+A carefully engineered prompt for the LLM (**Gemini**) defines Orca’s **character, backstory, and speaking style**.  
+
+### 🗣️ Speak with Emotion  
+Orca’s **calm, hopeful, and slightly melancholic tone** is brought to life through **streaming TTS** from **Murf AI**.  
+
+### 💬 Converse in Character  
+- Uses **ocean-based metaphors** 🌊  
+- Refers to me as its **"friend"** 🐚  
+- Never breaks character or admits it’s an AI  
+- Maintains consistency with **chat memory**  
+
+-📝 LinkedIn Post for Day 24: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7365773476449705984-FfUP?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 25 – Agent Special Skill 1 🔍  
+
+Just supercharged my AI voice agent **"Willy" the wise orca** with **real-time web search capabilities**! 🌊✨  
+
+## 🎯 What's New  
+- **Live Web Search** → Willy can now search the internet for current news, AI developments, and any information you need.  
+- **Seamless Integration** → Search triggers automatically when you ask for *"latest"*, *"current"*, or *"news"*.  
+- **Smart Keyword Detection** → The agent knows when to search vs. when to rely on existing knowledge.  
+- **Personality Preservation** → Willy keeps his sarcastic, ocean-deep wisdom while delivering search results.  
+
+## 🌟 Key Features  
+✅ Real-time voice conversation  
+✅ Automatic web search detection  
+✅ Live news and information updates  
+✅ Streaming TTS responses  
+✅ Ocean-themed AI personality  
+
+-📝 LinkedIn Post for Day 25: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7366171224567181313-HNW8?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 26 – Agent Special Skill 2 ⛈️  
+
+My AI voice assistant, **Willy the Orca**, just leveled up with a **second special skill: fetching real-time weather!** 🌊🐳  
+
+## 🚀 What's New  
+➡️ **Tool Switching** → Willy can now intelligently decide which tool to use based on my request.  
+➡️ **News Updates** → Ask for the *"latest news"*, and she’ll search the web using the **Tavily API**.  
+➡️ **Weather Reports** → Ask for the *"temperature in Bangalore"*, and she’ll fetch live data from the **WeatherAPI**.  
+
+## 🧠 How It Works  
+The magic happens in the **Python backend**, where I built a simple **"brain"**:  
+1. **Intent Detection** → Analyzes the transcript of what I said.  
+2. **Tool Selection** → Chooses between **Web Search** or **WeatherAPI**.  
+3. **Data Fetching** → Pulls the relevant live information.  
+4. **LLM Response** → Passes the data into **Google’s Gemini** to craft a response.  
+5. **Persona Layer** → Willy delivers it with her **witty, encouraging, ocean-inspired voice**.  
+
+## 🌟 Key Features  
+✅ Real-time voice conversation  
+✅ Intelligent intent detection  
+✅ Live news search (Tavily API)  
+✅ Real-time weather updates (WeatherAPI)  
+✅ Streaming TTS responses  
+✅ Consistent Orca personality 🐳  
+
+-📝 LinkedIn Post for Day 26: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7366429244245098496-0Fat?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 27 – A Major UI/UX Overhaul! 🚀  
+
+With just **4 days to go**, I decided to give my voice assistant, **"Orca"**, a complete **visual and functional revamp**.  
+The goal: move beyond a proof-of-concept and deliver a **polished, user-friendly experience**.  
+
+## ✨ What's New  
+
+### 🎨 Sleek New Interface  
+- Fully redesigned front end with a **modern dark theme**.  
+- Added an **animated Orca avatar** and subtle background effects for an **engaging atmosphere**.  
+
+### 🔐 User-Provided API Keys  
+- Brand new **API key configuration modal**.  
+- Users can securely enter their own keys for services like **Google Gemini, AssemblyAI, Murf AI**, and more.  
+- Makes the app **versatile** and gives full **control to the user**.  
+
+### 🔔 Interactive Feedback  
+- Added **sleek notifications** to confirm actions like saving keys.  
+- Enhances responsiveness and gives a **professional touch**.  
+
+## 🌟 Key Highlights  
+✅ Dark-themed, modern UI  
+✅ Animated Orca avatar 🐳  
+✅ Secure API key management  
+✅ Interactive feedback system  
+✅ More immersive user experience  
+
+-📝 LinkedIn Post for Day 27: [https://www.linkedin.com/posts/kiruthika-m-66b1a5254_30daysofaivoiceagents-buildwithmurf-murfai-activity-7366828587255033856-reYF?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+# 🗓️ Day 28 – Deploying My AI Voice Agent 🌍  
+
+Today’s challenge was all about **deployment** — making my AI Voice Agent accessible to the public! 🚀  
+
+## 🌐 Deployment Highlights  
+
+- ✅ **Hosted on Render.com** → A cloud provider with a great free tier that makes deployment simple and cost-effective.  
+- ✅ **Browser Access** → Now, anyone can try out my voice assistant directly from their browser 🎙️.  
+
+🔗 **Live Demo**: [https://lnkd.in/g8shNzAk](https://lnkd.in/g8shNzAk)  
+
+## 🎯 Why This Matters  
+This milestone is special because it transforms the project from a **local experiment** into a **publicly accessible AI Voice Agent** — a big step toward **real-world usability**.  
+
+## 📚 Resources  
+- [Render](https://render.com/)  
+- [Deployment Guide](https://lnkd.in/g4dTsSnR)  
+
+-📝 LinkedIn Post for Day 28:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7367226590646173696-Kcd0?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE] 
+
+---
+
+
 
 
 
