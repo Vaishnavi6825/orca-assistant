@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+websockets
+assemblyai
+google-generativeai
+requests
+tavily-python
+gunicorn
