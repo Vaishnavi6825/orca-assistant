@@ -1,105 +1,604 @@
-/* 🌌 OVERWRITING FINAL STYLES TO MATCH YOUR LATEST HTML STRUCTURE */
-
+/* --- Final Styles for the Talking Orca Assistant --- */
 body {
-  background: radial-gradient(circle at center, #001f3f, #000814);
-  color: #a8dfff;
-  font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100vh;
+    background: radial-gradient(circle at center, #001f33, #000814);
+    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevents scrollbars from bubbles */
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 60px;
+.ripple {
+    position: absolute;
+    top: 10px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(0, 238, 255, 0.15);
+    animation: rippleWave 3s infinite ease-out;
+    z-index: 0;
 }
 
-.tts-box {
-  margin-top: 30px;
-  background-color: rgba(0, 51, 102, 0.3);
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0, 238, 255, 0.3);
-  max-width: 400px;
-  width: 90%;
+.ripple::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 238, 255, 0.1);
+    animation: rippleWave 3s infinite ease-out;
+    animation-delay: 1.5s;
 }
 
-.tts-box h1 {
-  font-size: 22px;
-  color: #00eaff;
-  margin-bottom: 15px;
-  text-shadow: 0 0 10px #00eaffaa;
+@keyframes rippleWave {
+    0% { transform: scale(0.8); opacity: 0.6; }
+    100% { transform: scale(2.5); opacity: 0; }
 }
 
-.tts-box input[type="text"] {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: none;
-  width: 100%;
-  margin-bottom: 10px;
-  box-shadow: 0 0 8px rgba(0, 238, 255, 0.2);
+.title {
+    position: relative;
+    font-size: 28px;
+    color: #00eaff;
+    text-shadow: 0 0 15px rgba(0, 238, 255, 0.8), 0 0 30px rgba(0, 238, 255, 0.6);
+    margin-bottom: 10px;
+    animation: waveText 3s ease-in-out infinite;
+    z-index: 1;
 }
 
-.tts-box button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #00eaff;
-  color: #000;
-  margin: 10px 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+@keyframes waveText {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
-.tts-box button:hover {
-  background-color: #00cce6;
+.orca {
+    position: relative;
+    width: 200px;
+    height: 120px;
+    background: black;
+    border-radius: 100px 100px 80px 80px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    animation: swim 3s ease-in-out infinite;
+    cursor: pointer;
 }
 
-.tts-box audio {
-  margin-top: 15px;
-  width: 100%;
-  outline: none;
-  border-radius: 6px;
+.belly, .eye, .fin, .tail, .flipper, .mouth-wave {
+    position: absolute;
 }
 
-#echoAudio 
-{
-  display: block; /* Makes the audio player a block element */
-  margin: 15px auto 0 auto; /* Centers it horizontally with 15px top margin */
+.belly {
+    bottom: 0;
+    left: 20px;
+    width: 160px;
+    height: 60px;
+    background: white;
+    border-radius: 50% / 60%;
+    opacity: 0.9;
 }
 
-#uploadStatus {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #00ffcc;
-  text-shadow: 0 0 6px #00ffccaa;
+.eye {
+    top: 20px;
+    left: 40px;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px white;
 }
 
-.outer-box {
-  border: 2px solid white;
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 900px;
-  width: 95%;
-  margin: 40px auto;
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+.eye::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 14px;
+    height: 14px;
+    background: black;
+    border-radius: 50%;
 }
 
-.orca-fixed {
-  position: fixed;
-  left: 50%;
-  bottom: 30px; /* Adjust as needed */
-  transform: translateX(-50%);
-  z-index: 1001;
-  /* Optional: pointer-events if you want it clickable */
+.fin {
+    top: -20px;
+    left: 90px;
+    width: 40px;
+    height: 40px;
+    background: black;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transform: rotate(-20deg);
+}
+
+.tail {
+    right: -50px;
+    top: 40px;
+    width: 50px;
+    height: 40px;
+    background: black;
+    clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+    animation: tail-move 1s infinite alternate ease-in-out;
+}
+
+.flipper {
+    bottom: -20px;
+    left: 70px;
+    width: 40px;
+    height: 30px;
+    background: black;
+    border-radius: 20px;
+    transform: rotate(30deg);
+    animation: flipper-move 1s infinite alternate ease-in-out;
+}
+
+.mouth-wave {
+    bottom: 15px;
+    left: 20px;
+    width: 20px;
+    height: 10px;
+    background: rgba(0, 238, 255, 0.4);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 238, 255, 0.8);
+}
+
+.mouth-wave::after, .mouth-wave::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 238, 255, 0.2);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.mouth-wave::before { animation-delay: 0.3s; }
+.mouth-wave::after { animation-delay: 0.6s; }
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+@keyframes swim {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-15px) translateX(10px); }
+}
+@keyframes tail-move {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(15deg); }
+}
+@keyframes flipper-move {
+    0% { transform: rotate(30deg); }
+    100% { transform: rotate(50deg); }
+}
+
+.bubble {
+    position: absolute;
+    bottom: -50px;
+    width: 15px;
+    height: 15px;
+    background: rgba(173, 216, 230, 0.7);
+    border-radius: 50%;
+    animation: bubbleUp 8s linear infinite;
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.9);
+}
+
+@keyframes bubbleUp {
+    0% { transform: translateY(0) scale(0.8); opacity: 1; }
+    100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+}
+
+#startAndstopBtn {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 50%;
+    background-color: #ff5555;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 85, 85, 0.6);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#startAndstopBtn:hover {
+    box-shadow: 0 0 30px rgba(255, 85, 85, 0.9);
+    transform: scale(1.05);
+}
+
+#startAndstopBtn.recording {
+    background-color: #00eaff;
+    box-shadow: 0 0 30px rgba(0, 234, 255, 0.8);
+    transform: scale(1.1);
+}
+
+#startAndstopBtn.recording::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 234, 255, 0.4);
+    transform: translate(-50%, -50%);
+    animation: pulse-ring 1.5s infinite;
+}
+
+@keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
+}
+
+.record-icon {
+    width: 40px;
+    height: 40px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.31-2.69 6-6 6s-6-2.69-6-6H4c0 4.17 3.12 7.21 7 7.91V22h2v-4.09c3.88-.7 7-3.74 7-7.91h-2.7z"/></svg>') center center no-repeat;
+    background-size: contain;
+    transition: all 0.3s ease;
+}
+
+#startAndstopBtn.recording .record-icon {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M6 19h12V5H6v14zM8 7h8v10H8V7z"/></svg>') center center no-repeat;
+    background-size: contain;
+}
+
+#chat-log {
+    margin-top: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 350px;
+    background: rgba(0, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #00ffff;
+    border: 1px solid rgba(0, 234, 255, 0.2);
+    box-shadow: inset 0 0 8px rgba(0, 234, 255, 0.3);
+}
+
+/* This is the CSS that makes your existing JS work with this theme */
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 90%;
+    word-wrap: break-word;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.message.sent {
+    background-color: rgba(0, 150, 150, 0.4);
+    text-align: right;
+    margin-left: auto;
+}
+
+.message.received {
+    background-color: rgba(0, 200, 200, 0.3);
+    text-align: left;
+    margin-right: auto;
+}
+
+#conversationalUI {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+}
+
+.center-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+#loading {
+    display: none;
+    margin-top: 15px;
+    color: #00eaff;
+}
+
+/* Configuration Button */
+.config-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+}
+
+.config-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Content */
+.modal-content {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px 0;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    color: #3b82f6;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 0 30px 20px;
+}
+
+.api-key-section {
+    margin-bottom: 25px;
+}
+
+.api-key-section label {
+    display: block;
+    color: #e2e8f0;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.api-key-section input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.api-key-section input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: rgba(30, 41, 59, 1);
+}
+
+.api-key-section input::placeholder {
+    color: #64748b;
+}
+
+.api-key-section small {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.btn-secondary {
+    background: rgba(71, 85, 105, 0.8);
+    color: #e2e8f0;
+    border: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.btn-secondary:hover {
+    background: rgba(71, 85, 105, 1);
+    border-color: rgba(71, 85, 105, 0.8);
+    transform: translateY(-1px);
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    z-index: 10001;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    min-width: 250px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.notification.error {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+}
+
+.notification.info {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .modal-header {
+        padding: 20px 20px 0;
+    }
+    
+    .modal-body {
+        padding: 0 20px 15px;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px 25px;
+        flex-direction: column-reverse;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .config-btn {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .notification {
+        right: 15px;
+        left: 15px;
+        min-width: auto;
+    }
+}
+
+/* Scrollbar Styling for Modal */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
 }

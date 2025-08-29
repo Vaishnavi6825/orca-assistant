@@ -1,7 +1,3 @@
-This directory organizes the API endpoints into logical groups. Each file represents a different set of related endpoints.
-
-2.chat_routes.py: Manages the conversational agent's endpoints, including handling chat history and integrating the STT, LLM, and TTS services in a specific sequence.
-
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from typing import Dict, List
 import logging
@@ -9,7 +5,7 @@ from ..schemas.response import AgentChatResponse, ChatMessage
 from ..services.assemblyai_service import transcribe_audio_bytes
 from ..services.gemini_service import get_llm_response
 from ..services.murf_service import generate_tts_audio
-from ..config import FALLBACK_TEXT, MAX_CHAT_TURNS, MAX_CHAR_HISTORY
+from ..config import FALLBACK_TEXT, FALLBACK_AUDIO_URL, MAX_CHAT_TURNS, MAX_CHAR_HISTORY
 
 router = APIRouter()
 logger = logging.getLogger("uvicorn.error")

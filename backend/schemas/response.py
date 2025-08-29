@@ -1,9 +1,5 @@
-This directory holds all the Pydantic models used for API request and response validation.
-
-2.Defines the structure of the data sent back to the client, ensuring consistent API responses.
-
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 class LLMResponse(BaseModel):
     response: str

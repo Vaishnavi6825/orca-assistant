@@ -1,361 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Talking Orca Assistant</title>
-<style>
-/* --- Styling kept and combined from your design --- */
-body {
-    background: radial-gradient(circle at center, #001f33, #000814);
-    min-height: 100vh;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    /* Remove justify-content: center and align-items: center here */
-}
-
-.ripple { position: absolute; top: 10px; width: 200px; height: 200px; border-radius: 50%; background: rgba(0, 238, 255, 0.15); animation: rippleWave 3s infinite ease-out; z-index: 0; }
-.ripple::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 238, 255, 0.1); animation: rippleWave 3s infinite ease-out; animation-delay: 1.5s; }
-@keyframes rippleWave { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
-
-.title { position: relative; font-size: 28px; color: #00eaff; text-shadow: 0 0 15px rgba(0, 238, 255, 0.8), 0 0 30px rgba(0, 238, 255, 0.6); margin-bottom: 10px; animation: waveText 3s ease-in-out infinite; z-index: 1; }
-@keyframes waveText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-.orca { position: relative; width: 200px; height: 120px; background: black; border-radius: 100px 100px 80px 80px; box-shadow: 0 0 30px rgba(0, 255, 255, 0.3); animation: swim 3s ease-in-out infinite; cursor: pointer; }
-.belly, .eye, .fin, .tail, .flipper, .mouth-wave { position: absolute; }
-.belly { bottom: 0; left: 20px; width: 160px; height: 60px; background: white; border-radius: 50% / 60%; opacity: 0.9; }
-.eye { top: 20px; left: 40px; width: 30px; height: 30px; background: white; border-radius: 50%; box-shadow: 0 0 10px white; }
-.eye::after { content: ''; top: 8px; left: 8px; width: 14px; height: 14px; background: black; border-radius: 50%; position: absolute; }
-.fin { top: -20px; left: 90px; width: 40px; height: 40px; background: black; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); transform: rotate(-20deg); }
-.tail { right: -50px; top: 40px; width: 50px; height: 40px; background: black; clip-path: polygon(0% 50%, 100% 0%, 100% 100%); animation: tail-move 1s infinite alternate ease-in-out; }
-.flipper { bottom: -20px; left: 70px; width: 40px; height: 30px; background: black; border-radius: 20px; transform: rotate(30deg); animation: flipper-move 1s infinite alternate ease-in-out; }
-.mouth-wave { bottom: 15px; left: 20px; width: 20px; height: 10px; background: rgba(0, 238, 255, 0.4); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out; box-shadow: 0 0 10px rgba(0, 238, 255, 0.8); }
-.mouth-wave::after, .mouth-wave::before { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 238, 255, 0.2); animation: pulse 1.5s infinite ease-in-out; }
-.mouth-wave::before { animation-delay: 0.3s; }
-.mouth-wave::after { animation-delay: 0.6s; }
-@keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
-@keyframes swim { 0%, 100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-15px) translateX(10px); } }
-@keyframes tail-move { 0% { transform: rotate(0deg); } 100% { transform: rotate(15deg); } }
-@keyframes flipper-move { 0% { transform: rotate(30deg); } 100% { transform: rotate(50deg); } }
-
-.bubble { position: absolute; bottom: 0; width: 15px; height: 15px; background: rgba(173, 216, 230, 0.7); border-radius: 50%; animation: bubbleUp 8s linear infinite; box-shadow: 0 0 10px rgba(173, 216, 230, 0.9); }
-@keyframes bubbleUp { 0% { transform: translateY(0) scale(0.8); opacity: 1; } 100% { transform: translateY(-120vh) scale(1.2); opacity: 0; } }
-
-.message-box {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #00ffcc;
-    text-shadow: 0 0 8px #00ffcc;
-    display: none;
-    animation: fadeIn 0.5s ease forwards;
-    text-align: center;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-/* New Styling for the Combined Record Button */
-#recordButton {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border: none;
-    border-radius: 50%;
-    background-color: #ff5555; /* Red for inactive */
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(255, 85, 85, 0.6);
-    transition: all 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0;
-}
-#recordButton:hover {
-    box-shadow: 0 0 30px rgba(255, 85, 85, 0.9);
-    transform: scale(1.05);
-}
-#recordButton.recording {
-    background-color: #00eaff; /* Cyan for active */
-    box-shadow: 0 0 30px rgba(0, 234, 255, 0.8);
-    transform: scale(1.1);
-}
-#recordButton.recording::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: rgba(0, 234, 255, 0.4);
-    transform: translate(-50%, -50%);
-    animation: pulse-ring 1.5s infinite;
-}
-@keyframes pulse-ring {
-    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
-}
-.record-icon {
-    width: 40px;
-    height: 40px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.31-2.69 6-6 6s-6-2.69-6-6H4c0 4.17 3.12 7.21 7 7.91V22h2v-4.09c3.88-.7 7-3.74 7-7.91h-2.7z"/></svg>') center center no-repeat;
-    background-size: contain;
-    transition: all 0.3s ease;
-}
-#recordButton.recording .record-icon {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M6 19h12V5H6v14zM8 7h8v10H8V7z"/></svg>') center center no-repeat;
-    background-size: contain;
-}
-/* Conversation history styling from your prompt */
-#chatHistory {
-    margin-top: 30px;
-    max-height: 300px;
-    overflow-y: auto;
-    width: 320px;
-    background: rgba(0, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 14px;
-    color: #00ffff;
-    box-shadow: 0 0 8px #00eaff;
-}
-.chat-message {
-    margin-bottom: 10px;
-    padding: 6px 10px;
-    border-radius: 12px;
-    max-width: 90%;
-    word-wrap: break-word;
-}
-.user-msg {
-    background-color: rgba(0, 255, 255, 0.3);
-    text-align: right;
-    margin-left: auto;
-}
-.assistant-msg {
-    background-color: rgba(0, 255, 255, 0.6);
-    text-align: left;
-    margin-right: auto;
-}
-
-#conversationalUI {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
-    width: 100%;
-    max-width: 400px;
-}
-
-.center-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 40px; /* Reduce this value (was 40px or more) */
-    margin-top: 10px;
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talking Orca Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 
-<div class="ripple"></div>
+    <div class="ripple"></div>
 
-<div class="center-header">
-    <div class="title">🌊 I’m your Voice Assistant Orca 🌊</div>
-    <div id="avatar" class="orca">
-        <div class="belly"></div>
-        <div class="eye"></div>
-        <div class="fin"></div>
-        <div class="tail"></div>
-        <div class="flipper"></div>
-        <div class="mouth-wave"></div>
-    </div>
-</div>
-
-<div id="conversationalUI">
-    <div id="responseText" class="message-box"></div> <!-- Move this here -->
-    <button id="recordButton">
-        <div class="record-icon"></div>
+    <!-- Configuration Button -->
+    <button id="configBtn" class="config-btn" title="Configure API Keys">
+        ⚙️
     </button>
-    <div id="status">Click to speak...</div>
-    <audio id="echoAudio" style="display: none;"></audio>
-    <div id="chatHistory" aria-live="polite" aria-atomic="true"></div>
-</div>
 
-<div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
-<div class="bubble" style="left: 20%; animation-delay: 2s;"></div>
-<div class="bubble" style="left: 50%; animation-delay: 1s;"></div>
-<div class="bubble" style="left: 70%; animation-delay: 3s;"></div>
-<div class="bubble" style="left: 90%; animation-delay: 4s;"></div>
+    <!-- API Key Configuration Modal -->
+    <div id="configModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔑 API Key Configuration</h2>
+                <button id="closeModal" class="close-btn">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="api-key-section">
+                    <label for="murfKey">Murf AI API Key</label>
+                    <input type="password" id="murfKey" placeholder="Enter your Murf API key">
+                    <small>Required for text-to-speech functionality</small>
+                </div>
 
-<script>
-    // =============================
-    // Day 12 - UI Revamp JS
-    // =============================
+                <div class="api-key-section">
+                    <label for="assemblyKey">AssemblyAI API Key</label>
+                    <input type="password" id="assemblyKey" placeholder="Enter your AssemblyAI API key">
+                    <small>Required for speech-to-text functionality</small>
+                </div>
 
-    // 🔑 Get or create a session ID for persistent chat memory
-    function getSessionId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let sessionId = urlParams.get("session_id");
+                <div class="api-key-section">
+                    <label for="geminiKey">Google Gemini API Key</label>
+                    <input type="password" id="geminiKey" placeholder="Enter your Gemini API key">
+                    <small>Required for AI responses</small>
+                </div>
 
-        if (!sessionId) {
-            sessionId = crypto.randomUUID();
-            urlParams.set("session_id", sessionId);
-            window.history.replaceState({}, "", `${location.pathname}?${urlParams}`);
-        }
-        return sessionId;
-    }
-    const sessionId = getSessionId();
+                <div class="api-key-section">
+                    <label for="tavilyKey">Tavily API Key</label>
+                    <input type="password" id="tavilyKey" placeholder="Enter your Tavily API key">
+                    <small>Optional - for web search functionality</small>
+                </div>
 
-    document.addEventListener("DOMContentLoaded", () => {
-        // 👀 Eye tracking for the Orca
-        document.addEventListener("mousemove", (e) => {
-            document.querySelectorAll(".eye").forEach((eye) => {
-                const rect = eye.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-                eye.style.transform = `translate(${Math.cos(angle) * 8}px, ${Math.sin(angle) * 8}px)`;
-            });
-        });
+                <div class="api-key-section">
+                    <label for="weatherKey">Weather API Key</label>
+                    <input type="password" id="weatherKey" placeholder="Enter your WeatherAPI.com key">
+                    <small>Optional - for weather information</small>
+                </div>
+            </div>
 
-        // 🐳 Orca Assistant click event
-        const orcaAvatar = document.getElementById("avatar");
-        const responseText = document.getElementById("responseText");
-        if (orcaAvatar && responseText) {
-            orcaAvatar.addEventListener("click", () => {
-                responseText.innerText = "🗨 How can I help you? ";
-                responseText.style.display = "block";
-                orcaAvatar.style.boxShadow = "0 0 40px #00eaff";
-                setTimeout(() => (orcaAvatar.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.3)"), 1000);
-            });
-        }
-    
-        // 🎤 Conversational Agent logic
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
+            <div class="modal-footer">
+                <button id="clearKeys" class="btn btn-secondary">Clear All</button>
+                <button id="saveKeys" class="btn btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
 
-        const recordButton = document.getElementById("recordButton");
-        const echoAudio = document.getElementById("echoAudio");
-        const statusDiv = document.getElementById("status");
-        const chatHistoryDiv = document.getElementById("chatHistory");
+    <div class="center-header">
+        <div class="title">🌊 I'm your Voice Assistant Orca 🌊</div>
+        <div id="avatar" class="orca">
+            <div class="belly"></div>
+            <div class="eye" id="orcaEye"></div>
+            <div class="fin"></div>
+            <div class="tail"></div>
+            <div class="flipper"></div>
+            <div class="mouth-wave"></div>
+        </div>
+    </div>
 
-        // Append a message bubble to chat history
-        function appendChatMessage(role, text) {
-            const div = document.createElement("div");
-            div.classList.add("chat-message");
-            div.classList.add(role === "user" ? "user-msg" : "assistant-msg");
-            div.textContent = (role === "user" ? "You: " : "Orca: ") + text;
-            chatHistoryDiv.appendChild(div);
-            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
-        }
+    <div id="conversationalUI">
+        <button id="startAndstopBtn">
+            <div class="record-icon"></div>
+        </button>
 
-        // Update chat history UI from full history array
-        function updateChatHistory(history) {
-            chatHistoryDiv.innerHTML = "";
-            history.forEach(msg => {
-                appendChatMessage(msg.role, msg.content);
-            });
-        }
-
-        // Main function to handle recording and API calls
-        async function toggleRecording() {
-            if (isRecording) {
-                // Stop recording
-                mediaRecorder.stop();
-                isRecording = false;
-                recordButton.classList.remove("recording");
-                statusDiv.textContent = "🛑 Stopped. Processing...";
-                recordButton.disabled = true; // Disable button while processing
-            } else {
-                // Start recording
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                    mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        audioChunks = [];
-                        const formData = new FormData();
-                        formData.append("file", audioBlob, "recording.webm");
-
-                        try {
-                            statusDiv.textContent = "📤 Sending audio to Orca...";
-                            const res = await fetch(`/agent/chat/${sessionId}`, {
-                                method: "POST",
-                                body: formData
-                            });
-
-                            if (!res.ok) {
-                                const errorData = await res.json();
-                                throw new Error(errorData.detail || "Backend request failed");
-                            }
-
-                            const data = await res.json();
-
-                            if (data.error) {
-                                console.error("Server-side error:", data.error);
-                                statusDiv.textContent = "❌ Interaction failed.";
-                                if (data.audio_url) {
-                                    echoAudio.src = data.audio_url;
-                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
-                                }
-                            } else {
-                                if (data.chat_history) {
-                                    updateChatHistory(data.chat_history);
-                                }
-                                if (data.audio_url) {
-                                    echoAudio.src = data.audio_url;
-                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
-                                    echoAudio.onended = () => {
-                                        console.log("Bot finished talking, ready for next prompt.");
-                                        recordButton.disabled = false; // Re-enable the button
-                                        statusDiv.textContent = "Click to speak...";
-                                    };
-                                } else {
-                                    console.warn("No audio URL received.");
-                                    recordButton.disabled = false;
-                                    statusDiv.textContent = "Click to speak...";
-                                }
-                                statusDiv.textContent = "✅ Orca replied successfully!";
-                            }
-                        } catch (err) {
-                            console.error("Error:", err);
-                            statusDiv.textContent = "❌ Interaction failed.";
-                            recordButton.disabled = false; // Re-enable on error
-                        }
-                    };
-
-                    mediaRecorder.start();
-                    isRecording = true;
-                    recordButton.classList.add("recording");
-                    statusDiv.textContent = "🎤 Recording...";
-                } catch (err) {
-                    console.error("Microphone access error:", err);
-                    statusDiv.textContent = "❌ Microphone access denied.";
-                    recordButton.disabled = true;
-                }
-            }
-        }
+        <div id="loading">Processing...</div>
         
-        // Add the click listener to the single button
-        recordButton.addEventListener("click", toggleRecording);
+        <div id="chat-log" aria-live="polite" aria-atomic="true"></div>
+    </div>
 
-    });
-</script>
+    <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="bubble" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="bubble" style="left: 50%; animation-delay: 1s;"></div>
+    <div class="bubble" style="left: 70%; animation-delay: 3s;"></div>
+    <div class="bubble" style="left: 90%; animation-delay: 4s;"></div>
+
+    <script src="/static/script.js"></script>
+
 </body>
 </html>

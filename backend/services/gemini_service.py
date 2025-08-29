@@ -1,5 +1,3 @@
-gemini_service.py: Handles all interactions with the Google Gemini LLM to generate conversational responses.
-
 import google.generativeai as genai
 import logging
 from fastapi import HTTPException
@@ -15,7 +13,7 @@ def get_llm_response(prompt: str) -> str:
 
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-2.5-pro")
+        model = genai.GenerativeModel("gemini-1.5-flash")
         resp = model.generate_content(prompt)
         llm_text = getattr(resp, "text", "").strip()
         return llm_text or FALLBACK_TEXT

@@ -1,6 +1,3 @@
-This directory contains the business logic for interacting with external APIs. Each service is in its own file, which promotes code reuse and makes it easy to swap out one service for another in the future.
-murf_service.py: Contains the logic for converting text responses into audio using the Murf TTS API.
-
 import requests
 import logging
 from fastapi import HTTPException

@@ -1,8 +1,3 @@
-This directory holds all the Pydantic models used for API request and response validation.
-
-1. request.py: Defines the expected structure of incoming data (e.g., TTSRequest, LLMRequest).
-
-
 from pydantic import BaseModel
 from typing import Optional
 

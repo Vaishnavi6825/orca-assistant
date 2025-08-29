@@ -1,155 +1,351 @@
+const startAndstopBtn = document.getElementById('startAndstopBtn');
+const chatLog = document.getElementById('chat-log');
+const loadingIndicator = document.getElementById('loading');
 
-    // =============================
-    // Day 12 - UI Revamp JS
-    // =============================
+// Configuration modal elements
+const configBtn = document.getElementById('configBtn');
+const configModal = document.getElementById('configModal');
+const closeModal = document.getElementById('closeModal');
+const saveKeys = document.getElementById('saveKeys');
+const clearKeys = document.getElementById('clearKeys');
 
-    // 🔑 Get or create a session ID for persistent chat memory
-    function getSessionId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let sessionId = urlParams.get("session_id");
+let isRecording = false;
+let ws = null;
+let stream;
+let audioCtx;
+let source;
+let processor;
+let audioContext;
+let playheadTime = 0;
 
-        if (!sessionId) {
-            sessionId = crypto.randomUUID();
-            urlParams.set("session_id", sessionId);
-            window.history.replaceState({}, "", `${location.pathname}?${urlParams}`);
-        }
-        return sessionId;
+// API Keys storage
+let apiKeys = {
+    murf: '',
+    assembly: '',
+    gemini: '',
+    tavily: '',
+    weather: ''
+};
+
+function getSessionId() {
+    const params = new URLSearchParams(window.location.search);
+    let id = params.get("session");
+    if (!id) {
+        id = crypto.randomUUID();
+        params.set("session", id);
+        window.history.replaceState({}, "", `${location.pathname}?${params}`);
     }
-    const sessionId = getSessionId();
+    return id;
+}
 
-    document.addEventListener("DOMContentLoaded", () => {
-        // 👀 Eye tracking for the Orca
-        document.addEventListener("mousemove", (e) => {
-            document.querySelectorAll(".eye").forEach((eye) => {
-                const rect = eye.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-                eye.style.transform = `translate(${Math.cos(angle) * 8}px, ${Math.sin(angle) * 8}px)`;
-            });
+const sessionId = getSessionId();
+
+// ---------- API Key Management ----------
+function loadApiKeys() {
+    try {
+        const stored = localStorage.getItem('orcaApiKeys');
+        if (stored) {
+            apiKeys = JSON.parse(stored);
+            // Populate form fields
+            document.getElementById('murfKey').value = apiKeys.murf || '';
+            document.getElementById('assemblyKey').value = apiKeys.assembly || '';
+            document.getElementById('geminiKey').value = apiKeys.gemini || '';
+            document.getElementById('tavilyKey').value = apiKeys.tavily || '';
+            document.getElementById('weatherKey').value = apiKeys.weather || '';
+        }
+    } catch (error) {
+        console.error('Error loading API keys:', error);
+    }
+}
+
+function saveApiKeys() {
+    apiKeys = {
+        murf: document.getElementById('murfKey').value.trim(),
+        assembly: document.getElementById('assemblyKey').value.trim(),
+        gemini: document.getElementById('geminiKey').value.trim(),
+        tavily: document.getElementById('tavilyKey').value.trim(),
+        weather: document.getElementById('weatherKey').value.trim()
+    };
+
+    try {
+        localStorage.setItem('orcaApiKeys', JSON.stringify(apiKeys));
+        showNotification('API keys saved successfully! 🌊', 'success');
+        configModal.classList.remove('active');
+    } catch (error) {
+        console.error('Error saving API keys:', error);
+        showNotification('Error saving API keys', 'error');
+    }
+}
+
+function clearApiKeys() {
+    if (confirm('Are you sure you want to clear all API keys?')) {
+        apiKeys = { murf: '', assembly: '', gemini: '', tavily: '', weather: '' };
+        localStorage.removeItem('orcaApiKeys');
+        
+        // Clear form fields
+        document.getElementById('murfKey').value = '';
+        document.getElementById('assemblyKey').value = '';
+        document.getElementById('geminiKey').value = '';
+        document.getElementById('tavilyKey').value = '';
+        document.getElementById('weatherKey').value = '';
+        
+        showNotification('API keys cleared', 'info');
+    }
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => notification.classList.add('show'), 100);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => document.body.removeChild(notification), 300);
+    }, 3000);
+}
+
+// Modal event listeners
+configBtn.addEventListener('click', () => {
+    configModal.classList.add('active');
+});
+
+closeModal.addEventListener('click', () => {
+    configModal.classList.remove('active');
+});
+
+configModal.addEventListener('click', (e) => {
+    if (e.target === configModal) {
+        configModal.classList.remove('active');
+    }
+});
+
+saveKeys.addEventListener('click', saveApiKeys);
+clearKeys.addEventListener('click', clearApiKeys);
+
+// Load API keys on page load
+document.addEventListener('DOMContentLoaded', loadApiKeys);
+
+// ---------- Chat UI helpers ----------
+function addTextMessage(text, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', type);
+    messageDiv.textContent = text;
+    chatLog.appendChild(messageDiv);
+    chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+function addAudioMessage(audioUrl, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', type);
+
+    const audioPlayer = document.createElement('audio');
+    audioPlayer.controls = true;
+    audioPlayer.src = audioUrl;
+
+    messageDiv.appendChild(audioPlayer);
+    chatLog.appendChild(messageDiv);
+
+    if (type === 'received') {
+        audioPlayer.play();
+    }
+    chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+async function endtoendAudio(formdata) {
+    try {
+        loadingIndicator.style.display = "flex";
+
+        const response = await fetch(`/agent/chat/${sessionId}`, {
+            method: "POST",
+            body: formdata
         });
 
-        // 🐳 Orca Assistant click event
-        const orcaAvatar = document.getElementById("avatar");
-        const responseText = document.getElementById("responseText");
-        if (orcaAvatar && responseText) {
-            orcaAvatar.addEventListener("click", () => {
-                responseText.innerText = "🗨 How can I help you? ";
-                responseText.style.display = "block";
-                orcaAvatar.style.boxShadow = "0 0 40px #00eaff";
-                setTimeout(() => (orcaAvatar.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.3)"), 1000);
-            });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error: ${response.status} ${errorText}`);
         }
+
+        const data = await response.json();
+        console.log("Chat History:", data.history);
+        return data;
+
+    } catch (error) {
+        console.error("Error from transcribe to audio:", error.message);
+        addTextMessage(`Error: ${error.message}`, 'error');
+    } finally {
+        loadingIndicator.style.display = "none";
+    }
+}
+
+// ---------- Helpers ----------
+function floatTo16BitPCM(float32Array) {
+    const buffer = new ArrayBuffer(float32Array.length * 2);
+    const view = new DataView(buffer);
+    let offset = 0;
+    for (let i = 0; i < float32Array.length; i++, offset += 2) {
+        let s = Math.max(-1, Math.min(1, float32Array[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    }
+    return buffer;
+}
+
+// ---------- Real-time playback ----------
+function base64ToPCMFloat32(base64) {
+    const binary = atob(base64);
+    let offset = 0;
+
+    if (binary.length > 44 && binary.slice(0, 4) === "RIFF") {
+        offset = 44;
+    }
+
+    const length = binary.length - offset;
+    const byteArray = new Uint8Array(length);
+    for (let i = 0; i < length; i++) {
+        byteArray[i] = binary.charCodeAt(i + offset);
+    }
+
+    const view = new DataView(byteArray.buffer);
+    const sampleCount = byteArray.length / 2;
+    const float32Array = new Float32Array(sampleCount);
+
+    for (let i = 0; i < sampleCount; i++) {
+        const int16 = view.getInt16(i * 2, true);
+        float32Array[i] = int16 / 32768;
+    }
+    return float32Array;
+}
+
+function playAudioChunk(base64Audio) {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 44100 });
+        playheadTime = audioContext.currentTime;
+    }
+
+    const float32Array = base64ToPCMFloat32(base64Audio);
+    if (!float32Array) return;
+
+    const buffer = audioContext.createBuffer(1, float32Array.length, 44100);
+    buffer.copyToChannel(float32Array, 0);
+
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioContext.destination);
+
+    const now = audioContext.currentTime;
+    if (playheadTime < now + 0.15) {
+        playheadTime = now + 0.15;
+    }
+
+    source.start(playheadTime);
+    playheadTime += buffer.duration;
+}
+
+// ---------- Recording with API Keys ----------
+async function startRecording() {
+    // Check if required API keys are available
+    if (!apiKeys.murf || !apiKeys.assembly || !apiKeys.gemini) {
+        showNotification('Please configure your API keys first! 🔑', 'error');
+        configModal.classList.add('active');
+        return;
+    }
+
+    ws = new WebSocket("ws://127.0.0.1:8000/ws");
     
-        // 🎤 Conversational Agent logic
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-
-        const recordButton = document.getElementById("recordButton");
-        const echoAudio = document.getElementById("echoAudio");
-        const statusDiv = document.getElementById("status");
-        const chatHistoryDiv = document.getElementById("chatHistory");
-
-        // Append a message bubble to chat history
-        function appendChatMessage(role, text) {
-            const div = document.createElement("div");
-            div.classList.add("chat-message");
-            div.classList.add(role === "user" ? "user-msg" : "assistant-msg");
-            div.textContent = (role === "user" ? "You: " : "Orca: ") + text;
-            chatHistoryDiv.appendChild(div);
-            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
-        }
-
-        // Update chat history UI from full history array
-        function updateChatHistory(history) {
-            chatHistoryDiv.innerHTML = "";
-            history.forEach(msg => {
-                appendChatMessage(msg.role, msg.content);
-            });
-        }
-
-        // Main function to handle recording and API calls
-        async function toggleRecording() {
-            if (isRecording) {
-                // Stop recording
-                mediaRecorder.stop();
-                isRecording = false;
-                recordButton.classList.remove("recording");
-                statusDiv.textContent = "🛑 Stopped. Processing...";
-                recordButton.disabled = true; // Disable button while processing
-            } else {
-                // Start recording
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                    mediaRecorder.onstop = async () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        audioChunks = [];
-                        const formData = new FormData();
-                        formData.append("file", audioBlob, "recording.webm");
-
-                        try {
-                            statusDiv.textContent = "📤 Sending audio to Orca...";
-                            const res = await fetch(`/agent/chat/${sessionId}`, {
-                                method: "POST",
-                                body: formData
-                            });
-
-                            if (!res.ok) {
-                                const errorData = await res.json();
-                                throw new Error(errorData.detail || "Backend request failed");
-                            }
-
-                            const data = await res.json();
-
-                            if (data.error) {
-                                console.error("Server-side error:", data.error);
-                                statusDiv.textContent = "❌ Interaction failed.";
-                                if (data.audio_url) {
-                                    echoAudio.src = data.audio_url;
-                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
-                                }
-                            } else {
-                                if (data.chat_history) {
-                                    updateChatHistory(data.chat_history);
-                                }
-                                if (data.audio_url) {
-                                    echoAudio.src = data.audio_url;
-                                    echoAudio.play().catch(e => console.warn("Audio playback blocked.", e));
-                                    echoAudio.onended = () => {
-                                        console.log("Bot finished talking, ready for next prompt.");
-                                        recordButton.disabled = false; // Re-enable the button
-                                        statusDiv.textContent = "Click to speak...";
-                                    };
-                                } else {
-                                    console.warn("No audio URL received.");
-                                    recordButton.disabled = false;
-                                    statusDiv.textContent = "Click to speak...";
-                                }
-                                statusDiv.textContent = "✅ Orca replied successfully!";
-                            }
-                        } catch (err) {
-                            console.error("Error:", err);
-                            statusDiv.textContent = "❌ Interaction failed.";
-                            recordButton.disabled = false; // Re-enable on error
-                        }
-                    };
-
-                    mediaRecorder.start();
-                    isRecording = true;
-                    recordButton.classList.add("recording");
-                    statusDiv.textContent = "🎤 Recording...";
-                } catch (err) {
-                    console.error("Microphone access error:", err);
-                    statusDiv.textContent = "❌ Microphone access denied.";
-                    recordButton.disabled = true;
-                }
+    // Send API keys as headers (note: WebSocket doesn't support custom headers in browser)
+    // Instead, we'll send them as the first message after connection
+    ws.onopen = () => {
+        console.log("WebSocket connected");
+        // Send API keys to server
+        ws.send(JSON.stringify({
+            type: 'api_keys',
+            keys: {
+                'x-murf-key': apiKeys.murf,
+                'x-assembly-key': apiKeys.assembly,
+                'x-gemini-key': apiKeys.gemini,
+                'x-tavily-key': apiKeys.tavily,
+                'x-weather-key': apiKeys.weather
             }
-        }
-        
-        // Add the click listener to the single button
-        recordButton.addEventListener("click", toggleRecording);
+        }));
+    };
 
-    });
+    ws.onclose = () => console.log("WebSocket closed");
+    ws.onerror = (err) => console.error("WebSocket error", err);
+
+    ws.onmessage = (event) => {
+        try {
+            const msg = JSON.parse(event.data);
+            console.log(msg);
+
+            if (msg.type === "transcript") {
+                addTextMessage(msg.text, "sent");
+            } else if (msg.type === "ai_response") {
+                addTextMessage(msg.text, "received");
+            } else if (msg.type === "audio_chunk") {
+                playAudioChunk(msg.audio);
+            } else if (msg.type === "error") {
+                addTextMessage(`Error: ${msg.message}`, "error");
+                showNotification(msg.message, 'error');
+            } else {
+                console.log("Unknown message:", msg);
+            }
+
+        } catch (err) {
+            console.error("Failed to parse server message", err, event.data);
+        }
+    };
+
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    audioCtx = new AudioContext({ sampleRate: 16000 });
+    source = audioCtx.createMediaStreamSource(stream);
+    processor = audioCtx.createScriptProcessor(4096, 1, 1);
+
+    source.connect(processor);
+    processor.connect(audioCtx.destination);
+
+    processor.onaudioprocess = (e) => {
+        const inputData = e.inputBuffer.getChannelData(0);
+        const pcm16 = floatTo16BitPCM(inputData);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(pcm16);
+        }
+    };
+}
+
+function stopRecording() {
+    if (processor) {
+        processor.disconnect();
+        processor.onaudioprocess = null;
+    }
+    if (source) source.disconnect();
+    if (audioCtx) audioCtx.close();
+
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+    if (ws) ws.close();
+}
+
+startAndstopBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    if (!isRecording) {
+        try {
+            await startRecording();
+            isRecording = true;
+            startAndstopBtn.textContent = "Stop Recording";
+            startAndstopBtn.classList.add("recording");
+        } catch (err) {
+            console.error("Mic error", err);
+            showNotification("Microphone access denied", 'error');
+        }
+    } else {
+        stopRecording();
+        isRecording = false;
+        startAndstopBtn.textContent = "Start Recording";
+        startAndstopBtn.classList.remove("recording");
+    }
+});
+

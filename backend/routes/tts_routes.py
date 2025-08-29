@@ -1,7 +1,3 @@
-This directory organizes the API endpoints into logical groups. Each file represents a different set of related endpoints.
-
-1.tts_routes.py: Contains endpoints related to basic TTS generation, audio uploads, and transcription, which can be used as standalone utilities or by other parts of the application.
-
 from fastapi import APIRouter, File, UploadFile, HTTPException
 import shutil
 import os

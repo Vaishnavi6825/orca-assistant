@@ -1,5 +1,3 @@
-assemblyai_service.py: Contains the logic for transcribing audio files using the AssemblyAI API.
-
 import assemblyai as aai
 import tempfile
 import os

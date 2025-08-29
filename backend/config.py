@@ -1,11 +1,3 @@
-A centralized place for all application settings.
-This includes:
-                   
-1.Loading environment variables (API keys).
-2.Defining fallback values for services.
-3.Specifying constants like chat history limits.
-4.Using this file prevents hardcoding values throughout the application and makes it easy to manage configurations for different environments.
-
 import os
 from dotenv import load_dotenv
 
