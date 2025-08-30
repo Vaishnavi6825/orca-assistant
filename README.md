@@ -84,7 +84,6 @@ Install all at once:
 ```bash
 pip install fastapi uvicorn requests python-dotenv pydantic
 ```
-
 ---
 
 ## Project Structure
@@ -122,11 +121,11 @@ pip install fastapi uvicorn requests python-dotenv pydantic
 
 Create a `.env` file in the project root and add:
 
-```
-ASSEMBLYAI_API_KEY=your_assemblyai_api_key
-GEMINI_API_KEY=your_gemini_api_key
-MURF_API_KEY=your_murf_api_key
-```
+- *ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+- *GEMINI_API_KEY=your_gemini_api_key
+- *MURF_API_KEY=your_murf_api_key
+- *TAVILY_API_KEY=your_tavily_api_key
+- *WEATHER_API_KEY=your_weatherapi_key
 
 ---
 
@@ -188,11 +187,6 @@ You should see your conversation in the chat history and hear the Orca’s respo
 
 ---
 
-## 🛠 Tech Stack
-
-**Frontend:** HTML, CSS, JavaScript (Web Audio API, animations)  
-**Backend:** Python (FastAPI, WebSockets)  
-
 **APIs:**  
 - **AssemblyAI** – Live transcription  
 - **Google Gemini** – Generative AI responses  
@@ -202,46 +196,11 @@ You should see your conversation in the chat history and hear the Orca’s respo
 
 ---
 
-## 🚀 Quickstart (Local Setup)
-
-### 1. Clone the repo
-```bash
-git clone https://github.com/Vaishnavi6825/orca-assistant.git
-cd orca-assistant
-```
-
-### 2. Create and activate a virtual environment
- ```bash
-    python -m venv venv
-    venv\Scripts\activate   # On Windows
-    # or
-    source venv/bin/activate   # On Mac/Linux
-```
-
-### 3. Install dependencies
-pip install -r requirements.txt
-
-### 4. Add your API keys
-Create a .env file in the project root:
-
-- **ASSEMBLYAI_API_KEY=your_assemblyai_api_key
-- **GEMINI_API_KEY=your_gemini_api_key
-- **MURF_API_KEY=your_murf_api_key
-- **TAVILY_API_KEY=your_tavily_api_key
-- **WEATHER_API_KEY=your_weatherapi_key
-
-### 5. Run the backend server
-uvicorn backend.main:app --reload
-
-### 6. Open the app in your browser
-👉 http://127.0.0.1:8000
-
----
-
 ### 🎤 How to Use
-Open the app (locally or via Live Demo).
-Enter your API keys in the configuration modal.
-Click the 🎙 microphone button and start speaking.
+
+1. Open the app (locally or via Live Demo).
+2. Enter your API keys in the configuration modal.
+3. Click the 🎙 microphone button and start speaking.
 
 ORCA Assistant will:
 
@@ -276,7 +235,7 @@ All daily progress, learnings, and detailed notes are documented in [JOURNEY.md]
 
 ## Author
 
-👩‍💻 **Vaishnavi6825**  
+👩‍💻 **KIRUTHIKA M**  
 - GitHub: [Vaishnavi6825](https://github.com/Vaishnavi6825)  
 - LinkedIn: [https://www.linkedin.com/in/kiruthika-m-66b1a5254/](#)  
 
