@@ -235,7 +235,8 @@ All daily progress, learnings, and detailed notes are documented in [JOURNEY.md]
 
 ## Author
 
-👩‍💻 **KIRUTHIKA M**  
+👩‍💻 **KIRUTHIKA M** 
+
 - GitHub: [Vaishnavi6825](https://github.com/Vaishnavi6825)  
 - LinkedIn: [https://www.linkedin.com/in/kiruthika-m-66b1a5254/](#)  
 
