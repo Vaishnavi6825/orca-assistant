@@ -221,11 +221,11 @@ pip install -r requirements.txt
 ### 4. Add your API keys
 Create a .env file in the project root:
 
-ASSEMBLYAI_API_KEY=your_assemblyai_api_key
-GEMINI_API_KEY=your_gemini_api_key
-MURF_API_KEY=your_murf_api_key
-TAVILY_API_KEY=your_tavily_api_key
-WEATHER_API_KEY=your_weatherapi_key
+- **ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+- **GEMINI_API_KEY=your_gemini_api_key
+- **MURF_API_KEY=your_murf_api_key
+- **TAVILY_API_KEY=your_tavily_api_key
+- **WEATHER_API_KEY=your_weatherapi_key
 
 ### 5. Run the backend server
 uvicorn backend.main:app --reload
