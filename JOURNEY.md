@@ -750,4 +750,25 @@ This milestone is special because it transforms the project from a **local exper
 
 ---
 
+## ✅ Day 29 | Documentation & Blog ✍
+
+Almost there! Today I wrapped up the **final documentation** for my AI Voice Agent project and also shared my journey on Medium:  
+[Read the blog here](https://lnkd.in/gby93YV3)
+
+## Features of the AI Voice Agent
+- 🗣️ **Listen & transcribe speech** using AssemblyAI
+- 💡 **Respond intelligently** with Google Gemini
+- 🔊 **Speak back naturally** via Murf AI
+- 🖥️ **Run smoothly** on FastAPI
+
+Check out the full project here:  
+[GitHub Repository](https://lnkd.in/gvGYWKwS)
+
+-📝 LinkedIn Post for Day 29:[https://www.linkedin.com/posts/kiruthika-m-66b1a5254_buildwithmurf-30daysofvoiceagents-murfai-activity-7367517413711515648-xgE1?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD6tG3MBYWx9mOEBXuTEYqfqcrMbrpxUBwE]
+
+---
+
+
+
+
 
