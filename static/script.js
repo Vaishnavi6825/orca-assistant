@@ -251,7 +251,9 @@ async function startRecording() {
         return;
     }
 
-    ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    // ✅ FIX: Use a dynamic URL that works both locally and when deployed
+    const wsUrl = (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws";
+    ws = new WebSocket(wsUrl);
     
     // Send API keys as headers (note: WebSocket doesn't support custom headers in browser)
     // Instead, we'll send them as the first message after connection
