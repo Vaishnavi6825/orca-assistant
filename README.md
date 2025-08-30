@@ -157,7 +157,6 @@ MURF_API_KEY=your_murf_api_key
     ```bash
     uvicorn backend.main:app --reload
     ```
-
 6. **Open in your browser:**  
    [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
@@ -175,6 +174,110 @@ You should see your conversation in the chat history and hear the Orca’s respo
 
 ---
 
+## REAL TIME STREAMING THROUGH WEBSOCKETS
+## ✨ Key Features
+
+- 🎙 **Voice Interaction** – Speak naturally and get instant AI-powered replies.  
+- 🌐 **Streaming WebSockets** – Real-time audio transcription, response streaming, and playback.  
+- 🗣 **Natural Voice Output** – Human-like speech via Murf AI streaming TTS.  
+- 🧠 **Smarter AI** – Context-aware replies using Google Gemini, with persona (Orca 🐳).  
+- 🔍 **Special Skills** – Live web search (Tavily API) and real-time weather (WeatherAPI).  
+- 🎨 **Modern UI/UX** – Dark theme, animated Orca avatar, and live feedback notifications.  
+- 🔑 **Secure Setup** – User-provided API keys via an interactive modal.  
+- 🚀 **Deployed Online** – Accessible on Render.  
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend:** HTML, CSS, JavaScript (Web Audio API, animations)  
+**Backend:** Python (FastAPI, WebSockets)  
+
+**APIs:**  
+- **AssemblyAI** – Live transcription  
+- **Google Gemini** – Generative AI responses  
+- **Murf AI** – Streaming TTS voice synthesis  
+- **Tavily** – Real-time web search  
+- **WeatherAPI** – Live weather data  
+
+---
+
+## 🚀 Quickstart (Local Setup)
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/Vaishnavi6825/orca-assistant.git
+cd orca-assistant
+```
+
+### 2. Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+source venv/bin/activate  # Mac/Linux
+
+### 3. Install dependencies
+pip install -r requirements.txt
+
+### 4. Add your API keys
+Create a .env file in the project root:
+
+ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+GEMINI_API_KEY=your_gemini_api_key
+MURF_API_KEY=your_murf_api_key
+TAVILY_API_KEY=your_tavily_api_key
+WEATHER_API_KEY=your_weatherapi_key
+
+### 5. Run the backend server
+uvicorn backend.main:app --reload
+
+### 6. Open the app in your browser
+👉 http://127.0.0.1:8000
+
+---
+
+### 🎤 How to Use
+Open the app (locally or via Live Demo).
+Enter your API keys in the configuration modal.
+Click the 🎙 microphone button and start speaking.
+
+ORCA Assistant will:
+
+Listen → live transcription via AssemblyAI
+Think → reply using Gemini + persona
+Speak → stream TTS from Murf AI
+Act → fetch real-time web or weather info when needed
+
+---
+
+### Demo
+
+🌐 Live Deployment: [https://orca-assistant.onrender.com/?session=b9774b19-9b23-4139-9a68-46e507860741](#)  
+
+---
+
+## Future Improvements
+
+- Add support for multiple voices and languages  
+- Improve response latency with streaming transcription + TTS  
+- Deploy on cloud (Render / Vercel / AWS)  
+- Add authentication and personalization  
+
+---
+
+## Journey & Daily Logs
+
+This project was built as part of **30 Days of AI Voice Agents Challenge** 🗓️.  
+All daily progress, learnings, and detailed notes are documented in [JOURNEY.md](./JOURNEY.md).  
+
+---
+
+## Author
+
+👩‍💻 **Vaishnavi6825**  
+- GitHub: [Vaishnavi6825](https://github.com/Vaishnavi6825)  
+- LinkedIn: [https://www.linkedin.com/in/kiruthika-m-66b1a5254/](#)  
+
+---
 
 
 
