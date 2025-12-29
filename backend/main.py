@@ -292,7 +292,7 @@ class ConversationHistory:
 class AIAgent:
     """Handles the AI logic using Google Gemini and orchestrates special skills like web search and weather."""
     
-    def __init__(self, websocket, loop, murf, api_keys, model="gemini-2.5-pro"):
+    def __init__(self, websocket, loop, murf, api_keys, model="gemini-2.5-flash-lite"):
         self.websocket = websocket
         self.loop = loop
         self.murf = murf
