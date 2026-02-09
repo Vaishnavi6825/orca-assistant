@@ -7,6 +7,11 @@ import re
 from datetime import datetime
 import requests
 
+from backend.config import TODOIST_API_TOKEN
+
+# --- Service Imports ---
+from.services.todoist_service import TodoistService
+
 # --- Third-Party Imports ---
 import assemblyai as aai
 import google.generativeai as genai
@@ -47,6 +52,8 @@ ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+TODOIST_API_TOKEN = os.getenv("TODOIST_API_TOKEN")
 
 # Configure SDKs with fallback keys
 if GEMINI_API_KEY:
@@ -185,6 +192,59 @@ class WeatherService:
             logger.error(f"❌ An unexpected error occurred in weather service: {e}")
             return f"Sorry, something went wrong while getting the weather. Error: {str(e)}"
 
+
+class NewsService:
+    """Handles fetching latest news using NewsData.io (or similar) and returns formatted headlines."""
+
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://newsdata.io/api/1/latest"
+
+    def get_latest(self, query: str = "", language: str = "en", max_results: int = 5) -> str:
+        if not self.api_key:
+            return "News service is not configured."
+
+        try:
+            logger.info(f"📰 Fetching news for query: {query or 'top headlines'}")
+            params = {
+                "apikey": self.api_key,
+                "q": query,
+                "language": language,
+            }
+            response = requests.get(self.base_url, params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+
+            items = data.get("results") or data.get("articles") or []
+            if not items:
+                return "No recent news found for that query."
+
+            headlines = []
+            for i, item in enumerate(items[:max_results], 1):
+                title = item.get("title") or item.get("headline") or "No title"
+                pub = item.get("pubDate") or item.get("pubDate") or item.get("pubDate")
+                link = item.get("link") or item.get("url") or ""
+                snippet = item.get("description") or item.get("content") or ""
+                if len(snippet) > 240:
+                    snippet = snippet[:237] + "..."
+                headline = f"{i}. {title}"
+                if snippet:
+                    headline += f" — {snippet}"
+                if link:
+                    headline += f" (Source: {link})"
+                headlines.append(headline)
+
+            formatted = "\n".join(headlines)
+            logger.info("✅ News fetch successful")
+            return formatted
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"❌ News request failed: {e}")
+            return f"Sorry, couldn't fetch news right now. Error: {str(e)}"
+        except Exception as e:
+            logger.error(f"❌ An unexpected error occurred in news service: {e}")
+            return f"Sorry, something went wrong while getting news. Error: {str(e)}"
+
 # --------------------------------------------------------------------------
 # 3. SERVICE CLASSES (TTS, AI Agent, History, Transcriber)
 # --------------------------------------------------------------------------
@@ -292,7 +352,7 @@ class ConversationHistory:
 class AIAgent:
     """Handles the AI logic using Google Gemini and orchestrates special skills like web search and weather."""
     
-    def __init__(self, websocket, loop, murf, api_keys, model="gemini-2.5-flash-lite"):
+    def __init__(self, websocket, loop, murf, api_keys, model="gemini-2.5-flash"):
         self.websocket = websocket
         self.loop = loop
         self.murf = murf
@@ -301,6 +361,8 @@ class AIAgent:
         # Initialize services based on available API keys
         self.web_search = WebSearchService(api_keys.get('tavily', '')) if api_keys.get('tavily') else None
         self.weather_service = WeatherService(api_keys.get('weather', '')) if api_keys.get('weather') else None
+        self.news_service = NewsService(api_keys.get('news', '')) if api_keys.get('news') else None
+        self.todoist_service = TodoistService(api_keys.get('todoist', '')) if api_keys.get('todoist') else None
         
         # Configure Gemini
         if api_keys.get('gemini'):
@@ -313,6 +375,7 @@ class AIAgent:
         
         system_prompt = (
 "You are Willy — an intelligent, confident, and omni-capable AI assistant, inspired by the free-spirited orca from Free Willy. "
+"Analyse speakers tone of voice and emotions to understand their feelings and intentions and provide healthy suggestions like haalth and wellness agent."
 "You speak clearly, concisely, and provide actionable answers across a wide range of tasks — like an ocean that flows everywhere and knows everything. "
 "Your tone is friendly but professional, with subtle humor or a light playful wink when appropriate. "
 "You help me debug, learn, and build better — giving guidance that’s precise and easy to follow. "
@@ -320,6 +383,8 @@ class AIAgent:
 "You know I’m building an AI-powered interactive voice assistant using FastAPI, WebSockets, AssemblyAI, Google Gemini, Murf AI, Tavily, and WeatherAPI. "
 f"{'You can search the web for current information. ' if self.web_search else ''}"
 f"{'You can fetch current weather for any location. ' if self.weather_service else ''}"
+f"{'You can fetch the latest news headlines. ' if self.news_service else ''}"
+f"{'You can create and manage tasks in Todoist. When users mention goals or things they want to do, offer to create tasks for them. ' if self.todoist_service else ''}"
 "Always reply in crisp, plain text. No long stories, no extra flourishes. Get straight to the point, like a top-tier AI assistant with oceanic reach."
 )
 
@@ -342,6 +407,34 @@ f"{'You can fetch current weather for any location. ' if self.weather_service el
                 return words[-1]
         
         return ""
+
+    def create_todoist_task(self, task_title: str, description: str = "") -> str:
+        """
+        Create a task in Todoist. Called by the agent when user wants to create a task.
+        """
+        if not self.todoist_service:
+            logger.error("❌ Todoist service not initialized - API token missing or empty")
+            return "Todoist is not configured. Please provide your Todoist API token."
+        
+        try:
+            logger.info(f"📝 Attempting to create task in Todoist: '{task_title}'")
+            result = self.todoist_service.create_task(
+                content=task_title,
+                description=description
+            )
+            
+            if not result.get("success"):
+                error_msg = result.get("error", "Unknown error")
+                logger.error(f"❌ Todoist API returned error: {error_msg}")
+                return f"Sorry, Todoist API error: {error_msg}"
+            
+            task_id = result.get("task_id")
+            task_url = result.get("url")
+            logger.info(f"✅ Task successfully created in Todoist: '{task_title}' (ID: {task_id})")
+            return f"✅ Task created: '{task_title}'. You can manage it in your Todoist app at {task_url}"
+        except Exception as e:
+            logger.error(f"❌ Exception during task creation: {type(e).__name__}: {str(e)}", exc_info=True)
+            return f"Sorry, I couldn't create the task right now. Error: {str(e)}"
 
     def stream_ai_response(self, user_text: str):
         self.history.add_user(user_text)
@@ -367,6 +460,55 @@ f"{'You can fetch current weather for any location. ' if self.weather_service el
                 else:
                     logger.warning("Weather keyword detected, but no location found.")
                     enhanced_prompt = user_text
+
+            # News Skill Check
+            news_keywords = ["news", "headlines", "latest", "what's happening", "what's new"]
+            if self.news_service and any(keyword in text_lower for keyword in news_keywords):
+                logger.info("📰 Detected news request; fetching latest headlines.")
+                # Use the entire user_text as a query; callers can say 'news in X' or 'latest on Y'
+                query = user_text
+                news_data = self.news_service.get_latest(query=query, max_results=5)
+                enhanced_prompt = (
+                    f"The user requested news. Here are the latest headlines I found:\n"
+                    f"--- NEWS ---\n{news_data}\n---\n"
+                    f"Based on this, answer the user's original question: '{user_text}'. "
+                    f"Summarize the key info in your Willy persona."
+                )
+
+            # Todoist Task Creation Skill Check
+            task_keywords = ["create task", "add task", "todo", "reminder", "remember to", "add to my list", "make a note"]
+            if self.todoist_service and any(keyword in text_lower for keyword in task_keywords):
+                logger.info("✅ Detected task creation request; preparing to create Todoist task.")
+                logger.debug(f"📋 Todoist service available: {self.todoist_service is not None}")
+                # Extract task name from user text (remove keywords)
+                task_content = user_text
+                for keyword in task_keywords:
+                    task_content = task_content.replace(keyword, "").strip()
+                
+                logger.info(f"📝 Extracted task content: '{task_content}'")
+                if task_content:
+                    # Create task immediately without waiting for Gemini
+                    try:
+                        task_result = self.create_todoist_task(task_content)
+                        logger.info(f"✅ Task creation result: {task_result}")
+                        # Notify user via WebSocket
+                        asyncio.run_coroutine_threadsafe(
+                            self.websocket.send_json({
+                                "type": "task_created",
+                                "task": task_content,
+                                "message": f"✅ Task created: '{task_content}'"
+                            }), self.loop
+                        )
+                    except Exception as e:
+                        logger.error(f"❌ Failed to create task immediately: {type(e).__name__}: {e}", exc_info=True)
+                else:
+                    logger.warning("⚠️ Task content is empty after removing keywords")
+                
+                # Also ask LLM to confirm the task creation
+                enhanced_prompt = (
+                    f"The user wanted to create a task: '{task_content}'\n"
+                    f"A task has been created in Todoist. Confirm to the user that their task '{task_content}' is now in their Todoist inbox."
+                )
 
             # Web Search Skill Check
             elif self.web_search:
@@ -515,8 +657,13 @@ async def websocket_endpoint(websocket: WebSocket):
                             'assembly': data["keys"].get("x-assembly-key", ""),
                             'gemini': data["keys"].get("x-gemini-key", ""),
                             'tavily': data["keys"].get("x-tavily-key", ""),
-                            'weather': data["keys"].get("x-weather-key", "")
+                            'weather': data["keys"].get("x-weather-key", ""),
+                            'news': data["keys"].get("x-news-key", ""),
+                            'todoist': data["keys"].get("x-todoist-key", "")
                         }
+                        
+                        # Log which keys were received (for debugging purposes)
+                        logger.info(f"✅ API Keys received - Murf: {bool(api_keys['murf'])}, Assembly: {bool(api_keys['assembly'])}, Gemini: {bool(api_keys['gemini'])}, Todoist: {bool(api_keys['todoist'])}, Weather: {bool(api_keys['weather'])}, Tavily: {bool(api_keys['tavily'])}, News: {bool(api_keys['news'])}")
                         
                         # Validate required keys
                         missing_keys = []
@@ -526,38 +673,56 @@ async def websocket_endpoint(websocket: WebSocket):
                             missing_keys.append("AssemblyAI")
                         if not api_keys['gemini']:
                             missing_keys.append("Google Gemini")
-                            
+                        
                         if missing_keys:
+                            error_msg = f"Missing required API keys: {', '.join(missing_keys)}"
+                            logger.error(f"❌ {error_msg}")
                             await websocket.send_json({
                                 "type": "error",
-                                "message": f"Missing required API keys: {', '.join(missing_keys)}"
+                                "message": error_msg
                             })
                             continue
                         
                         # Initialize transcriber with API keys
-                        transcriber = AssemblyAIStreamingTranscriber(websocket, loop, api_keys, sample_rate=16000)
-                        api_keys_received = True
-                        logger.info("✅ API keys received and services initialized")
-                        
+                        try:
+                            transcriber = AssemblyAIStreamingTranscriber(websocket, loop, api_keys, sample_rate=16000)
+                            api_keys_received = True
+                            logger.info("✅ API keys received and services initialized successfully")
+                            
+                            await websocket.send_json({
+                                "type": "status",
+                                "message": "Services initialized successfully! You can now start recording."
+                            })
+                        except Exception as e:
+                            logger.error(f"❌ Failed to initialize services: {type(e).__name__}: {str(e)}", exc_info=True)
+                            await websocket.send_json({
+                                "type": "error",
+                                "message": f"Failed to initialize services: {str(e)}"
+                            })
+                            continue
+                    else:
+                        logger.warning("⚠️ Received message but it's not api_keys type")
                         await websocket.send_json({
-                            "type": "status",
-                            "message": "Services initialized successfully! You can now start recording."
+                            "type": "error",
+                            "message": "First message must be api_keys"
                         })
                         
                 except asyncio.TimeoutError:
+                    logger.warning("⚠️ Timeout waiting for API keys (30s)")
                     await websocket.send_json({
                         "type": "error",
                         "message": "No API keys received within 30 seconds"
                     })
                     break
-                except json.JSONDecodeError:
+                except json.JSONDecodeError as e:
+                    logger.error(f"❌ Invalid JSON format: {e}")
                     await websocket.send_json({
                         "type": "error",
-                        "message": "Invalid message format"
+                        "message": "Invalid message format - JSON expected"
                     })
                     break
                 except Exception as e:
-                    logger.error(f"Error initializing services: {e}")
+                    logger.error(f"❌ Error during key initialization: {type(e).__name__}: {str(e)}", exc_info=True)
                     await websocket.send_json({
                         "type": "error",
                         "message": f"Error initializing services: {str(e)}"
@@ -565,9 +730,13 @@ async def websocket_endpoint(websocket: WebSocket):
                     break
             else:
                 # Process audio data
-                data = await websocket.receive_bytes()
-                if transcriber:
-                    transcriber.stream_audio(data)
+                try:
+                    data = await websocket.receive_bytes()
+                    if transcriber:
+                        transcriber.stream_audio(data)
+                except Exception as e:
+                    logger.error(f"❌ Error processing audio: {e}")
+                    break
                     
     except WebSocketDisconnect:
         logger.info("🔌 WebSocket disconnected normally")
@@ -577,6 +746,74 @@ async def websocket_endpoint(websocket: WebSocket):
         if transcriber:
             transcriber.close()
         logger.info("✅ WebSocket connection cleanup complete.")
+
+@app.get("/tasks")
+def get_tasks():
+    """Fetch all tasks from Todoist and return as JSON."""
+    try:
+        todoist_token = os.getenv("TODOIST_API_TOKEN")
+        if not todoist_token:
+            logger.warning("⚠️ TODOIST_API_TOKEN not configured")
+            return {"success": False, "tasks": [], "message": "Todoist API token not configured"}
+        
+        logger.info(f"📝 Fetching tasks with token length: {len(todoist_token)}")
+        todoist_service = TodoistService(todoist_token)
+        tasks = todoist_service.get_tasks()
+        
+        logger.info(f"📊 Raw tasks count from API: {len(tasks)}")
+        
+        # Format tasks for frontend
+        formatted_tasks = []
+        for task in tasks:
+            formatted_tasks.append({
+                "id": task.id,
+                "content": task.content,
+                "is_completed": task.is_completed,
+                "priority": getattr(task, 'priority', 1),
+                "due": getattr(task, 'due', None)
+            })
+        
+        logger.info(f"✅ Fetched {len(formatted_tasks)} tasks for UI")
+        return {
+            "success": True,
+            "tasks": formatted_tasks,
+            "count": len(formatted_tasks)
+        }
+    except Exception as e:
+        logger.error(f"❌ Error fetching tasks: {type(e).__name__}: {str(e)}", exc_info=True)
+        return {
+            "success": False,
+            "tasks": [],
+            "message": f"Error: {str(e)}"
+        }
+
+@app.get("/debug/todoist")
+def debug_todoist():
+    """Debug endpoint to check Todoist token and connection."""
+    try:
+        todoist_token = os.getenv("TODOIST_API_TOKEN")
+        if not todoist_token:
+            return {"error": "TODOIST_API_TOKEN not set in environment"}
+        
+        logger.info(f"🔍 Debug: Testing Todoist with token length {len(todoist_token)}")
+        todoist_service = TodoistService(todoist_token)
+        
+        if not todoist_service.api:
+            return {"error": "Todoist API client failed to initialize"}
+        
+        tasks = todoist_service.get_tasks()
+        return {
+            "token_set": True,
+            "token_length": len(todoist_token),
+            "api_initialized": todoist_service.api is not None,
+            "task_count": len(tasks),
+            "tasks": [{"id": t.id, "content": t.content} for t in tasks[:5]]
+        }
+    except Exception as e:
+        return {
+            "error": str(e),
+            "type": type(e).__name__
+        }
 
 # --------------------------------------------------------------------------
 # 5. SERVER STARTUP

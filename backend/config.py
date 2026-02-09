@@ -8,6 +8,9 @@ load_dotenv()
 MURF_API_KEY = os.getenv("MURF_API_KEY", "").strip()
 ASSEMBLYAI_API_KEY = os.getenv("ASSEMBLYAI_API_KEY", "").strip()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "").strip()
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY", "").strip()
+TODOIST_API_TOKEN = os.getenv("TODOIST_API_TOKEN", "").strip()
 
 # Other Configurations
 FALLBACK_AUDIO_URL = (

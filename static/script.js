@@ -24,7 +24,8 @@ let apiKeys = {
     assembly: '',
     gemini: '',
     tavily: '',
-    weather: ''
+    weather: '',
+    todoist: ''
 };
 
 function getSessionId() {
@@ -52,6 +53,7 @@ function loadApiKeys() {
             document.getElementById('geminiKey').value = apiKeys.gemini || '';
             document.getElementById('tavilyKey').value = apiKeys.tavily || '';
             document.getElementById('weatherKey').value = apiKeys.weather || '';
+            document.getElementById('todoistKey').value = apiKeys.todoist || '';
         }
     } catch (error) {
         console.error('Error loading API keys:', error);
@@ -64,7 +66,8 @@ function saveApiKeys() {
         assembly: document.getElementById('assemblyKey').value.trim(),
         gemini: document.getElementById('geminiKey').value.trim(),
         tavily: document.getElementById('tavilyKey').value.trim(),
-        weather: document.getElementById('weatherKey').value.trim()
+        weather: document.getElementById('weatherKey').value.trim(),
+        todoist: document.getElementById('todoistKey').value.trim()
     };
 
     try {
@@ -79,7 +82,7 @@ function saveApiKeys() {
 
 function clearApiKeys() {
     if (confirm('Are you sure you want to clear all API keys?')) {
-        apiKeys = { murf: '', assembly: '', gemini: '', tavily: '', weather: '' };
+        apiKeys = { murf: '', assembly: '', gemini: '', tavily: '', weather: '', todoist: '' };
         localStorage.removeItem('orcaApiKeys');
         
         // Clear form fields
@@ -88,6 +91,7 @@ function clearApiKeys() {
         document.getElementById('geminiKey').value = '';
         document.getElementById('tavilyKey').value = '';
         document.getElementById('weatherKey').value = '';
+        document.getElementById('todoistKey').value = '';
         
         showNotification('API keys cleared', 'info');
     }
@@ -267,7 +271,9 @@ async function startRecording() {
                 'x-assembly-key': apiKeys.assembly,
                 'x-gemini-key': apiKeys.gemini,
                 'x-tavily-key': apiKeys.tavily,
-                'x-weather-key': apiKeys.weather
+                'x-weather-key': apiKeys.weather,
+                'x-news-key': apiKeys.news,
+                'x-todoist-key': apiKeys.todoist
             }
         }));
     };
@@ -351,3 +357,43 @@ startAndstopBtn.addEventListener("click", async (e) => {
     }
 });
 
+// ---------- Task Management ----------
+const showTasksBtn = document.getElementById('showTasksBtn');
+const tasksPanel = document.getElementById('tasksPanel');
+const closeTasksBtn = document.getElementById('closeTasksBtn');
+const tasksList = document.getElementById('tasksList');
+
+async function fetchAndDisplayTasks() {
+    try {
+        const response = await fetch('/tasks');
+        const data = await response.json();
+        
+        if (data.success && data.tasks.length > 0) {
+            let tasksHTML = '';
+            data.tasks.forEach(task => {
+                const statusIcon = task.is_completed ? '✓' : '○';
+                const completedClass = task.is_completed ? 'completed' : '';
+                tasksHTML += `
+                    <div class="task-item ${completedClass}">
+                        <span class="task-status">${statusIcon}</span>
+                        <span class="task-content">${task.content}</span>
+                    </div>
+                `;
+            });
+            tasksList.innerHTML = tasksHTML;
+        } else {
+            tasksList.innerHTML = '<p class="no-tasks">No tasks found in Todoist</p>';
+        }
+        
+        tasksPanel.style.display = 'block';
+    } catch (err) {
+        console.error("Error fetching tasks:", err);
+        tasksList.innerHTML = `<p class="error">Error loading tasks: ${err.message}</p>`;
+        tasksPanel.style.display = 'block';
+    }
+}
+
+showTasksBtn?.addEventListener('click', fetchAndDisplayTasks);
+closeTasksBtn?.addEventListener('click', () => {
+    tasksPanel.style.display = 'none';
+});

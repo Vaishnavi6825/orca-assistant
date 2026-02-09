@@ -53,6 +53,18 @@
                     <input type="password" id="weatherKey" placeholder="Enter your WeatherAPI.com key">
                     <small>Optional - for weather information</small>
                 </div>
+
+                <div class="api-key-section">
+                    <label for="newsKey">News API Key</label>
+                    <input type="password" id="newsKey" placeholder="Enter your NewsData.io API key">
+                    <small>Optional - for news headlines (NewsData.io)</small>
+                </div>
+
+                <div class="api-key-section">
+                    <label for="todoistKey">Todoist API Token</label>
+                    <input type="password" id="todoistKey" placeholder="Enter your Todoist API token">
+                    <small>Optional - to create and manage tasks</small>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -82,6 +94,17 @@
         <div id="loading">Processing...</div>
         
         <div id="chat-log" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- Tasks Display Section -->
+        <div id="tasksPanel" class="tasks-panel" style="display: none;">
+            <div class="tasks-header">
+                <h3>📋 Your Tasks</h3>
+                <button id="closeTasksBtn" class="close-tasks-btn">✕</button>
+            </div>
+            <div id="tasksList" class="tasks-list">
+                <p>Loading tasks...</p>
+            </div>
+        </div>
     </div>
 
     <div class="bubble" style="left: 10%; animation-delay: 0s;"></div>
